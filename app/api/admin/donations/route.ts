@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server';import {connectDB} from '@/lib/db';import {Donation} from '@/models';import {requireAdmin} from '@/lib/auth';export async function GET(){try{await requireAdmin(true);await connectDB();return NextResponse.json(await Donation.find().sort('-createdAt').lean())}catch{return NextResponse.json({error:'Unauthorized'},{status:401})}}

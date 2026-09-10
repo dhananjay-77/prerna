@@ -1,0 +1,1 @@
+import Link from 'next/link';import {Header,Footer} from '@/components/SiteChrome';export default function NotFound(){return <><Header/><main className="shell section"><span className="eyebrow">404</span><h1>Page not found</h1><p>The page you requested is unavailable.</p><Link className="btn" href="/">Go home</Link></main><Footer/></>}

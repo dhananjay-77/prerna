@@ -1,0 +1,2 @@
+import type {MetadataRoute} from 'next';
+export default function sitemap():MetadataRoute.Sitemap{const base=process.env.NEXT_PUBLIC_SITE_URL||'https://prernafoundation.org';return ['','/about-us','/projects','/impact','/programs','/gallery','/contact-us','/donate-now','/credits','/jal-dhara','/sies','/shakti','/hard','/tep','/tefa','/heal','/sos'].map(url=>({url:`${base}${url}`,lastModified:new Date()}))}
