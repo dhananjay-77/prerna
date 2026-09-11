@@ -8,7 +8,7 @@ const areas = [
     icon: "◒",
     title: "Education",
     text: "Creating access and opportunity through learning and knowledge.",
-    image: "/images/image.png",
+    image: "/images/education.jpg",
   },
   {
     number: "02",
@@ -78,6 +78,112 @@ const futurePlanning = [
   "Holistic Upliftment program for Katkari, Madiya and Kolam Tribes",
 ];
 
+const programStories = [
+  {
+    slug: "preranawari-jalsandharan-yashachi-itihasik-gatha",
+    title: "प्रेरणावारी: जलसंधारणाच्या यशाची एक ऐतिहासिक गाथा",
+    category: "Completed",
+    date: "2025-08-06",
+    image: "/images/program-1.jpg",
+    story:
+      "प्रेरणा फाउंडेशनच्या जलसंधारण कार्यातून ‘गाळमुक्त धरण, गाळयुक्त शिवार’ अभियानाच्या यशाची ही प्रेरणादायी कहाणी आहे. जलसाठ्यांचे पुनरुज्जीवन, गाळ उपसा आणि शेतकऱ्यांच्या सहभागातून पाणी उपलब्धता व ग्रामीण जीवन अधिक सक्षम करण्याचा प्रयत्न या उपक्रमाच्या केंद्रस्थानी आहे.",
+    href: "/programs",
+  },
+  {
+    slug: "manthan-multidisciplinary-approach",
+    title: "MANTHAN : Multidisciplinary Approach Nurturing Traditional Heritage and Ancient Narratives",
+    category: "Completed",
+    date: "2024-10-01",
+    image: "/images/program-2.jpg",
+    story:
+      "MANTHAN हा Indian Knowledge System, पारंपरिक वारसा आणि contemporary education यांच्यातील संवादाला चालना देणारा विचारमंच आहे. विविध विषयांतील विचारांना एकत्र आणून भारतीय ज्ञानपरंपरेचा आधुनिक शिक्षणाशी संबंध समजून घेण्याचा प्रयत्न या उपक्रमातून करण्यात आला.",
+    href: "/programs",
+  },
+  {
+    slug: "swami-govind-dev-giri-ji-maharaj",
+    title: "परम पूज्य स्वामी गोविंद देव गिरीजी महाराज",
+    category: "Program",
+    date: "2024-10-01",
+    image: "/images/program-3.jpg",
+    story:
+      "प्रेरणा फाउंडेशनच्या कार्यक्रम व विचारपरंपरेशी संबंधित हा विशेष उल्लेख आहे. समाज, संस्कार, ज्ञान आणि सकारात्मक परिवर्तन या मूल्यांना केंद्रस्थानी ठेवून प्रेरणादायी विचारांना समाजापर्यंत पोहोचविण्याचा प्रयत्न या विभागातून अधोरेखित होतो.",
+    href: "/programs",
+  },
+  {
+    slug: "jal-dhara",
+    title: "JAL-DHARA",
+    category: "Water Conservation",
+    image: "/images/water-conservation.jpg",
+    story:
+      "JAL-DHARA हा जलस्रोतांचे गाळमुक्तीकरण, पुनरुज्जीवन आणि पाणी साठवण क्षमता वाढविण्यावर केंद्रित उपक्रम आहे. जलस्रोतांमधील गाळ उपसणे, शेतांमध्ये गाळाचा उपयोग करणे आणि स्थानिक समुदायाच्या सहभागातून जलसुरक्षेला बळ देणे हा या कामाचा मुख्य उद्देश आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "sies",
+    title: "SIES",
+    category: "Education",
+    image: "/images/education.jpg",
+    story:
+      "SIES अंतर्गत शिक्षण, ज्ञान आणि संधी यांचा अधिक व्यापक समुदायापर्यंत विस्तार करण्याच्या दिशेने काम केले जाते. शिक्षणाच्या माध्यमातून व्यक्तींची क्षमता वाढवणे आणि त्यांना अर्थपूर्ण संधी उपलब्ध करून देणे हा या प्रयत्नाचा केंद्रबिंदू आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "shakti",
+    title: "SHAKTI",
+    category: "Women Empowerment",
+    image: "/images/women-empowerment.jpg",
+    story:
+      "SHAKTI हा महिला सक्षमीकरण, कौशल्य, आत्मनिर्भरता आणि स्वतंत्र संधी निर्माण करण्याच्या दिशेने काम करणारा उपक्रम आहे. महिलांना निर्णयक्षमता, कौशल्य आणि उपजीविकेच्या संधींशी जोडणे हा या प्रयत्नाचा उद्देश आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "hard",
+    title: "HARD",
+    category: "Rural Development",
+    image: "/images/natural-farming.jpg",
+    story:
+      "HARD अंतर्गत ग्रामीण भागातील सर्वांगीण विकास, स्थानिक क्षमता आणि शाश्वत उपजीविकेच्या संधी यांना चालना देण्याच्या दिशेने काम केले जाते. समुदायाच्या सहभागातून स्थानिक गरजा समजून घेऊन दीर्घकालीन परिणाम साधण्यावर भर आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "tep",
+    title: "TEP",
+    category: "Entrepreneurship",
+    image: "/images/skill-development.jpg",
+    story:
+      "TEP हा कौशल्य, उद्योजकता आणि स्वावलंबनाशी संबंधित प्रयत्नांना पुढे नेणारा उपक्रम आहे. व्यक्ती आणि समुदायांना कौशल्याधारित संधी, उद्योजकीय दृष्टी आणि आर्थिक स्वावलंबनाकडे नेण्याचा प्रयत्न यामध्ये केंद्रस्थानी आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "tefa",
+    title: "TEFA",
+    category: "Skill Development",
+    image: "/images/skill-development.jpg",
+    story:
+      "TEFA अंतर्गत कौशल्यविकास आणि क्षमता वृद्धीवर भर दिला जातो. रोजगारक्षमता, व्यावसायिक कौशल्ये आणि आत्मनिर्भरतेसाठी आवश्यक क्षमता विकसित करण्याच्या दिशेने हा प्रयत्न आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "heal",
+    title: "HEAL",
+    category: "Health",
+    image: "/images/health.jpg",
+    story:
+      "HEAL हा आरोग्यविषयक जागरूकता, निरोगी जीवनशैली आणि समुदायाच्या आरोग्याशी संबंधित उपक्रमांना आधार देणारा कार्यक्रम आहे. आरोग्याविषयी माहिती, योग्य निवडी आणि समुदाय-केंद्रित कृती यांना प्रोत्साहन देणे हा यामागील उद्देश आहे.",
+    href: "/projects",
+  },
+  {
+    slug: "sos",
+    title: "SOS",
+    category: "Community Support",
+    image: "/images/environment.jpg",
+    story:
+      "SOS हा गरजूंना आणि समुदायांना आवश्यक त्या वेळी सहाय्य व आधार उपलब्ध करून देण्याच्या सामाजिक भावनेशी जोडलेला उपक्रम आहे. सहकार्य, संवेदनशीलता आणि तातडीच्या गरजांना प्रतिसाद देणे या मूल्यांवर या प्रयत्नाचा भर आहे.",
+    href: "/projects",
+  },
+];
+
+
 export default async function Home() {
   const { projects, stats, programs, partners, goals } =
     await publicContent();
@@ -116,8 +222,20 @@ export default async function Home() {
         ========================================================= */}
 
         <section className="hero home-hero">
-          <div className="shell hero-shell">
+      <video
+        className="home-hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source src="/images/bg.mp4" type="video/mp4" />
+      </video>
 
+      <div className="home-hero-left" aria-hidden="true" />
+          <div className="shell hero-shell">
             <div className="hero-copy">
 
               <div className="hero-kicker">
@@ -139,7 +257,7 @@ export default async function Home() {
                 entrepreneurship and sustainable action.
               </p>
 
-              {/* <div className="hero-actions">
+              <div className="hero-actions" aria-hidden="true" style={{ display: "none" }}>
                 <Link className="btn light" href="/projects">
                   Explore our work
                   <span>→</span>
@@ -149,7 +267,7 @@ export default async function Home() {
                   Donate now
                   <span>↗</span>
                 </Link>
-              </div> */}
+              </div>
 
               <div className="hero-bottom-meta">
                 <span>EST. 2014</span>
@@ -161,16 +279,6 @@ export default async function Home() {
 
             </div>
 
-            <div className="hero-visual">
-
-              <div className="hero-image-main">
-                <img
-                  src="/images/prerna-hero.jpg"
-                  alt="Prerna Foundation community work"
-                />
-              </div>
-        
-            </div>
 
           </div>
         </section>
@@ -532,214 +640,132 @@ export default async function Home() {
 
 
         {/* =========================================================
-            PROGRAMS
+            PROGRAMS & STORIES
         ========================================================= */}
 
         <section className="section programs-section">
-
           <div className="shell">
-
             <div className="section-heading">
-
               <div>
-                <span className="eyebrow">
-                  Programs & News
-                </span>
-
+                <span className="eyebrow">Programs & Stories</span>
                 <h2>
-                  Ideas into
+                  From ideas
                   <br />
-                  <em>action.</em>
+                  to <em>impact.</em>
                 </h2>
               </div>
 
               <Link className="view-all" href="/programs">
                 View all programs →
               </Link>
-
             </div>
 
+            {(() => {
+              // Normalize program identity so the same story is not rendered twice
+              // when the CMS contains duplicate records with different slugs,
+              // punctuation, or spacing.
+              const normalizeProgramKey = (value: any) =>
+                String(value ?? "")
+                  .normalize("NFKC")
+                  .toLowerCase()
+                  .replace(/[^\\p{L}\\p{N}]+/gu, "");
 
-            <div className="programs-grid">
+              const dynamicProgramsRaw = (programs || []).map((program: any) => ({
+                slug: program.slug,
+                title: program.title,
+                category: program.category || "Program",
+                date: program.date,
+                image: program.image,
+                story: program.content
+                  ? program.content.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()
+                  : "प्रेरणा फाउंडेशनच्या कार्याची ही एक महत्त्वाची कथा आहे. समुदायाच्या सहभागातून शाश्वत आणि अर्थपूर्ण बदल घडविण्याचा प्रयत्न या उपक्रमातून केला जातो.",
+                href: `/programs/${program.slug}`,
+              }));
 
-              {programs.length ? (
+              // First remove duplicates coming directly from the CMS/database.
+              // Same slug OR same normalized title = one program.
+              const dynamicPrograms = dynamicProgramsRaw.filter(
+                (program: any, index: number, list: any[]) => {
+                  const slugKey = normalizeProgramKey(program.slug);
+                  const titleKey = normalizeProgramKey(program.title);
 
-                programs.slice(0, 3).map((program: any, index: number) => (
+                  return index === list.findIndex((item: any) => {
+                    const itemSlugKey = normalizeProgramKey(item.slug);
+                    const itemTitleKey = normalizeProgramKey(item.title);
 
-                  <article
-                    className="program-card"
-                    key={program.slug}
-                  >
+                    return (
+                      (slugKey && itemSlugKey && slugKey === itemSlugKey) ||
+                      (titleKey && itemTitleKey && titleKey === itemTitleKey)
+                    );
+                  });
+                }
+              );
 
-                    <div className="program-image">
+              // Build keys from the final CMS list so static fallback stories
+              // cannot create a second card for an already-loaded CMS story.
+              const dynamicProgramKeys = new Set(
+                dynamicPrograms.flatMap((program: any) =>
+                  [
+                    normalizeProgramKey(program.slug),
+                    normalizeProgramKey(program.title),
+                  ].filter(Boolean)
+                )
+              );
 
-                      <img
-                        src={
-                          program.image ||
-                          `/images/program-${index + 1}.jpg`
-                        }
-                        alt={program.title}
-                      />
+              const merged = [
+                ...dynamicPrograms,
+                ...programStories.filter((staticProgram) => {
+                  const staticKeys = [
+                    normalizeProgramKey(staticProgram.slug),
+                    normalizeProgramKey(staticProgram.title),
+                  ].filter(Boolean);
 
-                      <span>
-                        {program.category}
-                      </span>
+                  return !staticKeys.some((key) => dynamicProgramKeys.has(key));
+                }),
+              ];
 
-                    </div>
+              return (
+                <div className="programs-grid programs-grid-all">
+                  {merged.map((program: any, index: number) => (
+                    <article className="program-card" key={program.slug || `${program.title}-${index}`}>
+                      <div className="program-image">
+                        <img
+                          src={program.image || `/images/program-${(index % 3) + 1}.jpg`}
+                          alt={program.title}
+                          loading={index > 2 ? "lazy" : "eager"}
+                        />
+                        <span>{program.category || "Program"}</span>
+                      </div>
 
-                    <div className="program-content">
+                      <div className="program-content">
+                        <small>
+                          {program.date
+                            ? new Date(program.date).toLocaleDateString("en-IN", {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              })
+                            : "Prerna Foundation"}
+                        </small>
 
-                      <small>
-                        {program.date
-                          ? new Date(
-                            program.date
-                          ).toLocaleDateString(
-                            "en-IN",
-                            {
-                              day: "2-digit",
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )
-                          : "Prerna Foundation"}
-                      </small>
+                        <h3>{program.title}</h3>
 
-                      <h3>
-                        {program.title}
-                      </h3>
+                        <p>
+                          {(program.story || "").slice(0, 260)}
+                          {(program.story || "").length > 260 ? "…" : ""}
+                        </p>
 
-                      <p>
-                        {program.content
-                          ?.replace(/<[^>]*>/g, "")
-                          .slice(0, 170)}
-                        ...
-                      </p>
-
-                      <Link href={`/programs/${program.slug}`}>
-                        Read story
-                        <span>→</span>
-                      </Link>
-
-                    </div>
-
-                  </article>
-
-                ))
-
-              ) : (
-
-                <>
-                  <article className="program-card">
-
-                    <div className="program-image">
-                      <img
-                        src="/images/program-1.jpg"
-                        alt="Prerna Foundation program"
-                      />
-
-                      <span>Completed</span>
-                    </div>
-
-                    <div className="program-content">
-
-                      <small>06 August 2025</small>
-
-                      <h3>
-                        प्रेरणावारी: जलसंधारणाच्या यशाची
-                        एक ऐतिहासिक गाथा
-                      </h3>
-
-                      <p>
-                        जलसंधारण आणि ‘गाळमुक्त धरण,
-                        गाळयुक्त शिवार’ अभियानाच्या
-                        यशस्वी कार्याची प्रेरणादायी कहाणी.
-                      </p>
-
-                      <Link href="/programs">
-                        Read story →
-                      </Link>
-
-                    </div>
-
-                  </article>
-
-
-                  <article className="program-card">
-
-                    <div className="program-image">
-                      <img
-                        src="/images/program-2.jpg"
-                        alt="MANTHAN seminar"
-                      />
-
-                      <span>Completed</span>
-                    </div>
-
-                    <div className="program-content">
-
-                      <small>01 October 2024</small>
-
-                      <h3>
-                        MANTHAN :
-                        Multidisciplinary Approach
-                      </h3>
-
-                      <p>
-                        Indian Knowledge System आणि
-                        contemporary education यावर
-                        राष्ट्रीय स्तरावरील विचारमंथन.
-                      </p>
-
-                      <Link href="/programs">
-                        Read story →
-                      </Link>
-
-                    </div>
-
-                  </article>
-
-
-                  <article className="program-card">
-
-                    <div className="program-image">
-                      <img
-                        src="/images/program-3.jpg"
-                        alt="Prerna Foundation event"
-                      />
-
-                      <span>Completed</span>
-                    </div>
-
-                    <div className="program-content">
-
-                      <small>Prerna Foundation</small>
-
-                      <h3>
-                        Community, Knowledge &
-                        Sustainable Development
-                      </h3>
-
-                      <p>
-                        समुदायाच्या सहभागातून विकासाच्या
-                        विविध क्षेत्रांमध्ये meaningful
-                        initiatives.
-                      </p>
-
-                      <Link href="/programs">
-                        Read story →
-                      </Link>
-
-                    </div>
-
-                  </article>
-                </>
-
-              )}
-
-            </div>
-
+                        <Link href={program.href || "/programs"}>
+                          Read full story
+                          <span>→</span>
+                        </Link>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
-
         </section>
 
 
@@ -998,28 +1024,40 @@ export default async function Home() {
         }
 
         /* HERO */
+.home-hero {
+          min-height: min(900px, 92vh);
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          color: #fff;
+          background: #12352f;
+        }
 
-        <section className="hero home-hero">
-          <video
-            className="home-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-          >
-      <source src="/images/bg.mp4" type="video/mp4" />
-          </video>
+        .home-hero-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 0;
+        }
 
-          <div className="home-hero-left" aria-hidden="true" />
+        .home-hero::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: linear-gradient(90deg, rgba(5,22,19,.82) 0%, rgba(5,22,19,.62) 46%, rgba(5,22,19,.25) 100%);
+        }
 
-          <div className="shell hero-shell">
+        .home-hero-left {
+          display: none;
+        }
 
-        
         .hero-shell {
-          display: grid;
-          grid-template-columns: 1fr .88fr;
+          display: block;
+          grid-template-columns: 1fr;
           align-items: center;
           gap: 70px;
           position: relative;
@@ -1041,6 +1079,18 @@ export default async function Home() {
           width: 35px;
           height: 1px;
           background: #d7e85f;
+        }
+
+        .hero-copy {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+          width: min(760px, 100%);
+          text-align: left;
+          justify-self: start;
         }
 
         .hero-copy h1 {
@@ -1092,89 +1142,6 @@ export default async function Home() {
           font-size: .62rem;
           letter-spacing: .13em;
           opacity: .48;
-        }
-
-        .hero-visual {
-          min-height: 590px;
-          position: relative;
-        }
-
-        .hero-image-main {
-          position: absolute;
-          width: 76%;
-          height: 78%;
-          right: 0;
-          top: 6%;
-          overflow: hidden;
-          border-radius: 2px;
-          transform: rotate(2deg);
-          box-shadow: 0 35px 80px rgba(0,0,0,.25);
-        }
-
-        .hero-image-main img {
-          height: 100%;
-          object-fit: cover;
-          transition: transform .8s ease;
-        }
-
-        .hero-visual:hover .hero-image-main img {
-          transform: scale(1.05);
-        }
-
-        .hero-floating-card {
-          position: absolute;
-          z-index: 3;
-          left: 0;
-          bottom: 4%;
-          width: 245px;
-          padding: 27px;
-          background: #fff;
-          color: #12352f;
-          box-shadow: 0 25px 60px rgba(0,0,0,.2);
-        }
-
-        .hero-floating-card span {
-          display: block;
-          margin-bottom: 14px;
-          font-size: .63rem;
-          letter-spacing: .15em;
-          text-transform: uppercase;
-          opacity: .5;
-        }
-
-        .hero-floating-card strong {
-          display: block;
-          font-size: 2rem;
-          line-height: .92;
-          letter-spacing: -.05em;
-        }
-
-        .hero-floating-card small {
-          display: block;
-          margin-top: 18px;
-          line-height: 1.55;
-          opacity: .62;
-        }
-
-        .hero-circle {
-          position: absolute;
-          right: -25px;
-          bottom: 10%;
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.35);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          font-size: .55rem;
-          letter-spacing: .14em;
-          transform: rotate(-10deg);
-        }
-
-        .hero-circle {
-          display: none !important;
         }
 
         /* INTRO */
@@ -1872,19 +1839,10 @@ export default async function Home() {
 
         @media (max-width: 1000px) {
 
-          .hero-shell,
           .intro-layout,
           .feature-layout,
           .future-layout {
             grid-template-columns: 1fr;
-          }
-
-          .hero-shell {
-            gap: 40px;
-          }
-
-          .hero-visual {
-            min-height: 500px;
           }
 
           .intro-layout {
@@ -1927,50 +1885,46 @@ export default async function Home() {
         }
 
         @media (max-width: 700px) {
+          .hero-copy {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+            width: 100%;
+            text-align: left;
+          }
+
 
           .home-hero {
             min-height: auto;
             padding: 80px 0 65px;
           }
 
-        .home-hero-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center center;
-          z-index: 0;
-          display: block;
-        }
-
-        .home-hero-left {
-          position: absolute;
-          inset: 0 auto 0 0;
-          width: 42%;
-          background: #123a66;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        .home-hero-left::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          width: 55%;
-          left: 100%;
-          background: linear-gradient(
-            90deg,
-            #123a66 0%,
-            rgba(18,58,102,.65) 35%,
-            rgba(18,58,102,0) 100%
-          );
-        }
-
         .home-hero .hero-shell {
-          position: relative;
-          z-index: 2;
-        }
+    position: relative;
+    z-index: 2;
+  }
+
+  .home-hero .hero-copy {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+    position: relative;
+    z-index: 3;
+  }
+
+  .home-hero .hero-copy h1,
+  .home-hero .hero-copy p,
+  .home-hero .hero-copy a,
+  .home-hero .hero-copy span {
+    position: relative;
+    z-index: 3;
+  }
 
           .hero-copy h1 {
             font-size: clamp(3.4rem, 16vw, 5.5rem);
@@ -1978,26 +1932,6 @@ export default async function Home() {
 
           .hero-copy > p {
             font-size: .95rem;
-          }
-
-          .hero-visual {
-            min-height: 430px;
-          }
-
-          .hero-image-main {
-            width: 84%;
-            height: 78%;
-          }
-
-          .hero-floating-card {
-            width: 210px;
-            padding: 21px;
-          }
-
-          .hero-circle {
-            width: 90px;
-            height: 90px;
-            right: 0;
           }
 
           .section {
