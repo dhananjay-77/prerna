@@ -192,13 +192,13 @@ const programStories = [
 
 
 export default async function Home() {
-  const { projects, stats, programs, partners, goals } =
+  const { stats, programs, partners, goals } =
     await publicContent();
 
   const metrics =
-    stats?.metrics?.filter((m: any) => m.enabled) !== undefined
-      ? stats.metrics.filter((m: any) => m.enabled)
-      : [
+  Array.isArray(stats?.metrics)
+    ? stats.metrics.filter((m: any) => m?.enabled)
+    : [
         {
           label: "Water bodies",
           value: "41",
@@ -218,9 +218,9 @@ export default async function Home() {
         },
       ];
 
-  return (
-    <>
-      <Header />
+return (
+  <>
+    <Header />
 
       <main className="home-page">
 
@@ -668,29 +668,73 @@ export default async function Home() {
             </div>
 
             {(() => {
-              const dynamicPrograms = (programs || []).map((program: any) => ({
-                slug: program.slug,
-                title: program.title,
-                category: program.category || "Program",
-                date: program.date,
-                image: program.image,
-                story: program.content
-                  ? program.content.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()
-                  : "प्रेरणा फाउंडेशनच्या कार्याची ही एक महत्त्वाची कथा आहे. समुदायाच्या सहभागातून शाश्वत आणि अर्थपूर्ण बदल घडविण्याचा प्रयत्न या उपक्रमातून केला जातो.",
-                href: `/programs/${program.slug}`,
-              }));
+              const normalizeProgramKey = (value: unknown) =>
+                String(value ?? "")
+                  .normalize("NFKC")
+                  .toLowerCase()
+                  .replace(/[^\\p{L}\\p{N}]+/gu, "");
+
+              const dynamicPrograms = Array.isArray(programs)
+                ? programs
+                    .filter((program: any) => program && (program.slug || program.title))
+                    .map((program: any) => ({
+                      slug: String(program.slug ?? "").trim(),
+                      title: String(program.title ?? "Program").trim(),
+                      category: String(program.category ?? "Program"),
+                      date: program.date,
+                      image: program.image,
+                      story: program.content
+                        ? String(program.content)
+                            .replace(/<[^>]*>/g, "")
+                            .replace(/\\s+/g, " ")
+                            .trim()
+                        : "प्रेरणा फाउंडेशनच्या कार्याची ही एक महत्त्वाची कथा आहे. समुदायाच्या सहभागातून शाश्वत आणि अर्थपूर्ण बदल घडविण्याचा प्रयत्न या उपक्रमातून केला जातो.",
+                      href: program.slug
+                        ? `/programs/${program.slug}`
+                        : "/programs",
+                    }))
+                : [];
+
+              // Remove duplicates coming from the CMS itself.
+              const uniqueDynamicPrograms = dynamicPrograms.filter(
+                (program: any, index: number, list: any[]) => {
+                  const slugKey = normalizeProgramKey(program.slug);
+                  const titleKey = normalizeProgramKey(program.title);
+
+                  return (
+                    index ===
+                    list.findIndex((item: any) => {
+                      const itemSlugKey = normalizeProgramKey(item.slug);
+                      const itemTitleKey = normalizeProgramKey(item.title);
+
+                      return (
+                        (slugKey && itemSlugKey === slugKey) ||
+                        (titleKey && itemTitleKey === titleKey)
+                      );
+                    })
+                  );
+                }
+              );
+
+              // Add static fallback stories only when the same story is not already in the CMS.
+              const dynamicKeys = new Set(
+                uniqueDynamicPrograms.flatMap((program: any) => [
+                  normalizeProgramKey(program.slug),
+                  normalizeProgramKey(program.title),
+                ].filter(Boolean))
+              );
 
               const merged = [
-                ...dynamicPrograms,
-                ...programStories.filter(
-                  (staticProgram) =>
-                    !dynamicPrograms.some(
-                      (dynamicProgram) =>
-                        dynamicProgram.slug === staticProgram.slug ||
-                        dynamicProgram.title?.trim().toLowerCase() ===
-                          staticProgram.title?.trim().toLowerCase()
-                    )
-                ),
+                ...uniqueDynamicPrograms,
+                ...programStories.filter((staticProgram) => {
+                  const slugKey = normalizeProgramKey(staticProgram.slug);
+                  const titleKey = normalizeProgramKey(staticProgram.title);
+
+                  return (
+                    !dynamicKeys.has(slugKey) &&
+                    !dynamicKeys.has(titleKey)
+                  );
+                }),
               ];
 
               return (
@@ -811,7 +855,7 @@ export default async function Home() {
             PARTNERS
         ========================================================= */}
 
-        {partners.length > 0 && (
+        {Array.isArray(partners) && partners.length > 0 && (
 
           <section className="section partners-section">
 
@@ -1051,13 +1095,11 @@ export default async function Home() {
         }
 
         .hero-copy {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding-left: 0;
-  padding-right: 0;
-  text-align: left;
           width: min(760px, 100%);
+          max-width: 100%;
+          margin: 0;
+          padding-left: 0;
+          padding-right: 0;
           text-align: left;
           justify-self: start;
         }
@@ -1855,13 +1897,11 @@ export default async function Home() {
 
         @media (max-width: 700px) {
           .hero-copy {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding-left: 0;
-  padding-right: 0;
-  text-align: left;
             width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding-left: 0;
+            padding-right: 0;
             text-align: left;
           }
 
