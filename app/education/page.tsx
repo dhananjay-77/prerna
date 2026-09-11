@@ -1,733 +1,761 @@
-import Link from "next/link";
-
-const educationPhotos = [
-  {
-    src: "/images/education-1.jpg",
-    alt: "Students learning together",
-    title: "Learning Together",
-  },
-  {
-    src: "/images/education-2.jpg",
-    alt: "Students in a classroom",
-    title: "Classroom Learning",
-  },
-  {
-    src: "/images/education-3.jpg",
-    alt: "Children participating in an activity",
-    title: "Learning by Doing",
-  },
-  {
-    src: "/images/education-4.jpg",
-    alt: "Students using computers",
-    title: "Digital Education",
-  },
-  {
-    src: "/images/education-5.jpg",
-    alt: "Educational workshop",
-    title: "Workshops & Activities",
-  },
-  {
-    src: "/images/education-6.jpg",
-    alt: "Students and mentors",
-    title: "Mentorship",
-  },
-];
-
-const educationVideos = [
-  {
-    src: "/images/education-video-1.mp4",
-    title: "A Day of Learning",
-    text: "A glimpse into the learning environment, activities and experiences created for children.",
-  },
-  {
-    src: "/images/education-video-2.mp4",
-    title: "Learning Beyond the Classroom",
-    text: "Education becomes meaningful when children explore, participate and learn from the world around them.",
-  },
-  {
-    src: "/images/education-video-3.mp4",
-    title: "Digital Learning",
-    text: "Technology, computers and digital resources help students build confidence for the future.",
-  },
-];
+import { Header, Footer } from "@/components/SiteChrome";
 
 export default function EducationPage() {
+  const programs = [
+    {
+      icon: "01",
+      title: "Digital Education",
+      text: "विद्यार्थ्यांना आधुनिक तंत्रज्ञानाशी जोडण्यासाठी संगणक, डिजिटल साधने आणि ऑनलाइन learning चा परिचय करून दिला जातो.",
+    },
+    {
+      icon: "02",
+      title: "Computer & Technical Skills",
+      text: "Basic computer knowledge, internet usage, office tools आणि आवश्यक technical skills यांचे practical training दिले जाते.",
+    },
+    {
+      icon: "03",
+      title: "Skill Development",
+      text: "विद्यार्थ्यांच्या आवडी आणि क्षमतेनुसार रोजगाराभिमुख कौशल्ये विकसित करण्यासाठी विविध प्रशिक्षण उपक्रम राबवले जातात.",
+    },
+    {
+      icon: "04",
+      title: "Career Guidance",
+      text: "शिक्षणानंतरच्या संधी, career options आणि पुढील शिक्षणाबाबत विद्यार्थ्यांना मार्गदर्शन व योग्य दिशा देण्याचा प्रयत्न केला जातो.",
+    },
+    {
+      icon: "05",
+      title: "Communication Skills",
+      text: "English communication, presentation, confidence building आणि व्यक्तिमत्त्व विकासासाठी learning activities घेतल्या जातात.",
+    },
+    {
+      icon: "06",
+      title: "Workshops & Training",
+      text: "नियमित workshops, practical sessions आणि interactive learning activities द्वारे विद्यार्थ्यांना प्रत्यक्ष अनुभव दिला जातो.",
+    },
+  ];
+
+  const gallery = [
+    "/images/education-1.jpg",
+    "/images/education-2.jpg",
+    "/images/education-3.jpg",
+    "/images/education-4.jpg",
+    "/images/education-5.jpg",
+    "/images/education-6.jpg",
+  ];
+
+  const videos = [
+    {
+      src: "/images/education-video-1.mp4",
+      title: "Digital Learning",
+      text: "विद्यार्थ्यांसाठी digital learning आणि computer training session.",
+    },
+    {
+      src: "/images/education-video-2.mp4",
+      title: "Skill Training",
+      text: "Practical skill development आणि training activity.",
+    },
+    {
+      src: "/images/education-video-3.mp4",
+      title: "Learning Workshop",
+      text: "Interactive workshop मधील learning moments.",
+    },
+  ];
+
   return (
-    <main className="education-page">
-      <style>{`
-        .education-page {
-          --edu-ink: #12352f;
-          --edu-blue: #0b4b70;
-          --edu-sky: #dfeef1;
-          --edu-muted: #6e8793;
-          --edu-paper: #f5f7ef;
-          --edu-white: #ffffff;
-          background: var(--edu-paper);
-          color: var(--edu-ink);
-          min-height: 100vh;
-          overflow: hidden;
-        }
-
-        .education-page * { box-sizing: border-box; }
-
-        .education-shell {
-          width: min(1180px, calc(100% - 48px));
-          margin: 0 auto;
-        }
-
-        .education-hero {
-          position: relative;
-          min-height: 720px;
-          display: flex;
-          align-items: flex-end;
-          overflow: hidden;
-          background: #12352f;
-          isolation: isolate;
-        }
-
-        .education-hero::after {
-          content: "";
-          position: absolute;
-          width: 420px;
-          height: 420px;
-          right: -150px;
-          top: 90px;
-          border: 1px solid rgba(255,255,255,.18);
-          border-radius: 50%;
-          box-shadow: 0 0 0 45px rgba(255,255,255,.035),
-                      0 0 0 90px rgba(255,255,255,.025);
-          pointer-events: none;
-        }
-
-        .education-hero-media {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .education-hero-overlay {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(90deg, rgba(7, 31, 29, .88) 0%, rgba(7, 31, 29, .60) 48%, rgba(7, 31, 29, .18) 100%),
-            linear-gradient(0deg, rgba(7, 31, 29, .78) 0%, transparent 55%);
-        }
-
-        .education-hero-content {
-          position: relative;
-          z-index: 1;
-          padding: 145px 0 92px;
-          max-width: 800px;
-        }
-
-        .education-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 15px;
-          border: 1px solid rgba(255,255,255,.4);
-          border-radius: 999px;
-          color: #fff;
-          background: rgba(255,255,255,.08);
-          backdrop-filter: blur(8px);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: .18em;
-          text-transform: uppercase;
-          margin-bottom: 27px;
-        }
-
-        .education-eyebrow::before {
-          content: "";
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #fff;
-          box-shadow: 0 0 0 5px rgba(255,255,255,.1);
-        }
-
-        .education-hero h1 {
-          margin: 0;
-          color: #fff;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(64px, 10vw, 138px);
-          line-height: .84;
-          font-weight: 500;
-          letter-spacing: -.065em;
-          text-wrap: balance;
-        }
-
-        .education-hero h1 span {
-          display: block;
-          font-size: .48em;
-          line-height: 1;
-          letter-spacing: -.02em;
-          margin-top: 18px;
-        }
-
-        .education-hero p {
-          max-width: 670px;
-          margin: 34px 0 0;
-          padding-left: 19px;
-          border-left: 2px solid rgba(255,255,255,.65);
-          color: rgba(255,255,255,.88);
-          font-size: 18px;
-          line-height: 1.78;
-        }
-
-        .education-intro {
-          position: relative;
-          padding: 125px 0 105px;
-        }
-
-        .education-intro::before {
-          content: "EDUCATION";
-          position: absolute;
-          right: -45px;
-          top: 65px;
-          color: rgba(11,75,112,.045);
-          font-size: clamp(80px, 13vw, 190px);
-          font-weight: 800;
-          letter-spacing: -.08em;
-          transform: rotate(-8deg);
-          pointer-events: none;
-        }
-
-        .education-intro-grid {
-          display: grid;
-          grid-template-columns: .8fr 1.2fr;
-          gap: 80px;
-          align-items: start;
-        }
-
-        .education-kicker {
-          color: var(--edu-muted);
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: .18em;
-          text-transform: uppercase;
-        }
-
-        .education-intro h2 {
-          margin: 15px 0 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 5vw, 66px);
-          line-height: .98;
-          font-weight: 500;
-          letter-spacing: -.04em;
-        }
-
-        .education-intro-copy p {
-          margin: 0 0 20px;
-          color: #5e7885;
-          font-size: 17px;
-          line-height: 1.85;
-        }
-
-        .education-highlight {
-          position: relative;
-          margin-top: 34px;
-          padding: 27px 30px;
-          border-left: 4px solid var(--edu-blue);
-          background: #fff;
-          box-shadow: 0 18px 45px rgba(18,53,47,.07);
-        }
-
-        .education-highlight::after {
-          content: "✦";
-          position: absolute;
-          right: 24px;
-          top: 20px;
-          color: var(--edu-blue);
-          opacity: .35;
-          font-size: 22px;
-        }
-
-        .education-highlight strong {
-          display: block;
-          color: var(--edu-blue);
-          font-size: 17px;
-          margin-bottom: 7px;
-        }
-
-        .education-stats {
-          padding: 0 0 105px;
-        }
-
-        .education-stat-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          background: #fff;
-          border: 1px solid rgba(18,53,47,.10);
-          box-shadow: 0 18px 55px rgba(18,53,47,.06);
-        }
-
-        .education-stat {
-          position: relative;
-          padding: 36px 25px;
-          border-right: 1px solid rgba(18,53,47,.12);
-          transition: transform .25s ease, background .25s ease;
-        }
-
-        .education-stat:hover {
-          transform: translateY(-5px);
-          background: var(--edu-sky);
-        }
-
-        .education-stat:last-child { border-right: 0; }
-
-        .education-stat strong {
-          display: block;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 45px;
-          line-height: 1;
-          color: var(--edu-blue);
-          margin-bottom: 10px;
-        }
-
-        .education-stat span {
-          color: var(--edu-muted);
-          font-size: 13px;
-          text-transform: uppercase;
-          letter-spacing: .1em;
-        }
-
-        .education-gallery {
-          padding: 125px 0;
-          background: #fff;
-          position: relative;
-        }
-
-        .education-section-head {
-          display: flex;
-          justify-content: space-between;
-          gap: 30px;
-          align-items: end;
-          margin-bottom: 42px;
-        }
-
-        .education-section-head h2 {
-          margin: 12px 0 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(42px, 6vw, 74px);
-          line-height: .95;
-          font-weight: 500;
-          letter-spacing: -.045em;
-        }
-
-        .education-section-head p {
-          max-width: 390px;
-          margin: 0;
-          color: var(--edu-muted);
-          line-height: 1.7;
-        }
-
-        .education-photo-grid {
-          display: grid;
-          grid-template-columns: repeat(12, 1fr);
-          gap: 18px;
-        }
-
-        .education-photo-card {
-          position: relative;
-          min-height: 310px;
-          overflow: hidden;
-          background: #e8ece7;
-          border-radius: 2px;
-          box-shadow: 0 18px 45px rgba(18,53,47,.10);
-        }
-
-        .education-photo-card:nth-child(1),
-        .education-photo-card:nth-child(4) {
-          grid-column: span 7;
-        }
-
-        .education-photo-card:nth-child(2),
-        .education-photo-card:nth-child(3),
-        .education-photo-card:nth-child(5),
-        .education-photo-card:nth-child(6) {
-          grid-column: span 5;
-        }
-
-        .education-photo-card img {
-          width: 100%;
-          height: 100%;
-          min-height: 310px;
-          object-fit: cover;
-          display: block;
-          filter: saturate(.92);
-          transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .5s ease;
-        }
-
-        .education-photo-card:hover img {
-          transform: scale(1.07);
-          filter: saturate(1.08);
-        }
-
-        .education-photo-caption {
-          position: absolute;
-          left: 18px;
-          right: 18px;
-          bottom: 18px;
-          padding: 15px 17px;
-          background: rgba(255,255,255,.92);
-          backdrop-filter: blur(10px);
-          color: var(--edu-ink);
-          font-weight: 700;
-          transform: translateY(4px);
-          transition: transform .3s ease;
-        }
-
-        .education-photo-card:hover .education-photo-caption {
-          transform: translateY(0);
-        }
-
-        .education-videos {
-          padding: 110px 0;
-          background: var(--edu-paper);
-        }
-
-        .education-video-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
-        }
-
-        .education-video-card {
-          background: #fff;
-          overflow: hidden;
-          border: 1px solid rgba(18,53,47,.08);
-          box-shadow: 0 18px 50px rgba(18,53,47,.08);
-          transition: transform .3s ease, box-shadow .3s ease;
-        }
-
-        .education-video-card:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 26px 60px rgba(18,53,47,.13);
-        }
-
-        .education-video-card video {
-          width: 100%;
-          aspect-ratio: 16 / 10;
-          display: block;
-          object-fit: cover;
-          background: #183d48;
-        }
-
-        .education-video-card video::cue {
-          background: rgba(0,0,0,.7);
-        }
-
-        .education-video-body {
-          padding: 25px 24px 28px;
-        }
-
-        .education-video-body h3 {
-          margin: 0 0 10px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 27px;
-          line-height: 1.05;
-          color: var(--edu-blue);
-        }
-
-        .education-video-body p {
-          margin: 0;
-          color: var(--edu-muted);
-          line-height: 1.7;
-          font-size: 15px;
-        }
-
-        .education-quote {
-          position: relative;
-          padding: 145px 0;
-          background:
-            radial-gradient(circle at 12% 30%, rgba(255,255,255,.10), transparent 25%),
-            radial-gradient(circle at 90% 75%, rgba(255,255,255,.08), transparent 28%),
-            var(--edu-blue);
-          color: #fff;
-          overflow: hidden;
-        }
-
-        .education-quote::before,
-        .education-quote::after {
-          position: absolute;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 260px;
-          line-height: 1;
-          opacity: .08;
-        }
-
-        .education-quote::before {
-          content: "“";
-          left: 3%;
-          top: 20px;
-        }
-
-        .education-quote::after {
-          content: "”";
-          right: 3%;
-          bottom: -95px;
-        }
-
-        .education-quote blockquote {
-          max-width: 930px;
-          margin: 0 auto;
-          text-align: center;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(34px, 5vw, 66px);
-          line-height: 1.08;
-          letter-spacing: -.035em;
-        }
-
-        .education-quote cite {
-          display: block;
-          margin-top: 28px;
-          font-family: Arial, sans-serif;
-          font-size: 12px;
-          font-style: normal;
-          letter-spacing: .16em;
-          text-transform: uppercase;
-          opacity: .75;
-        }
-
-        .education-cta {
-          padding: 110px 0 125px;
-        }
-
-        .education-cta-box {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 30px;
-          padding: 52px 58px;
-          background: #fff;
-          border: 1px solid rgba(18,53,47,.1);
-          box-shadow: 0 24px 65px rgba(18,53,47,.08);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .education-cta-box::after {
-          content: "";
-          position: absolute;
-          width: 230px;
-          height: 230px;
-          border: 1px solid rgba(11,75,112,.12);
-          border-radius: 50%;
-          right: -80px;
-          bottom: -110px;
-        }
-
-        .education-cta-box h2 {
-          margin: 0 0 9px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 40px;
-          font-weight: 500;
-        }
-
-        .education-cta-box p {
-          margin: 0;
-          color: var(--edu-muted);
-        }
-
-        .education-cta-link {
-          flex: 0 0 auto;
-          display: inline-flex;
-          align-items: center;
-          padding: 16px 25px;
-          background: var(--edu-ink);
-          color: #fff;
-          text-decoration: none;
-          font-weight: 700;
-          position: relative;
-          z-index: 1;
-          transition: transform .25s ease, background .25s ease;
-        }
-
-        .education-cta-link:hover {
-          transform: translateY(-3px);
-          background: var(--edu-blue);
-        }
-
-        @media (max-width: 850px) {
-          .education-shell { width: min(100% - 30px, 680px); }
-          .education-hero { min-height: 620px; }
-          .education-hero-content { padding: 115px 0 65px; }
-          .education-hero h1 { font-size: clamp(60px, 14vw, 95px); }
-          .education-intro-grid { grid-template-columns: 1fr; gap: 35px; }
-          .education-stat-grid { grid-template-columns: repeat(2, 1fr); }
-          .education-stat:nth-child(2) { border-right: 0; }
-          .education-photo-grid { display: grid; grid-template-columns: 1fr 1fr; }
-          .education-photo-card:nth-child(n) { grid-column: span 1; }
-          .education-video-grid { grid-template-columns: 1fr; }
-          .education-section-head { display: block; }
-          .education-section-head p { margin-top: 20px; }
-          .education-cta-box { display: block; padding: 34px; }
-          .education-cta-link { margin-top: 25px; }
-        }
-
-        @media (max-width: 560px) {
-          .education-hero-content { padding: 100px 0 55px; }
-          .education-hero h1 { font-size: 66px; }
-          .education-hero h1 span { font-size: .43em; line-height: 1.15; }
-          .education-hero p { font-size: 15px; padding-left: 14px; }
-          .education-intro::before { display: none; }
-          .education-intro, .education-gallery, .education-videos { padding: 75px 0; }
-          .education-stats { padding-bottom: 75px; }
-          .education-stat-grid { grid-template-columns: 1fr 1fr; }
-          .education-stat { padding: 25px 15px; }
-          .education-stat strong { font-size: 34px; }
-          .education-photo-grid { grid-template-columns: 1fr; }
-          .education-photo-card:nth-child(n) { grid-column: span 1; }
-          .education-quote { padding: 85px 0; }
-        }
-      `}</style>
-
-      <section className="education-hero">
-        <video
-          className="education-hero-media"
-          src="/images/education-hero.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
-        <div className="education-hero-overlay" />
-        <div className="education-shell">
-          <div className="education-hero-content">
-            <div className="education-eyebrow">Prerna Foundation</div>
-            <h1>
-              Education
-              <span>शिक्षणातून संधी, संधीमधून परिवर्तन.</span>
-            </h1>
-            <p>
-              Every child deserves the opportunity to learn, explore and build
-              a confident future. Our education initiatives create spaces where
-              knowledge is practical, inclusive and connected to real life.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="education-intro">
-        <div className="education-shell education-intro-grid">
-          <div>
-            <div className="education-kicker">Our Education Work</div>
-            <h2>Learning is the beginning of change.</h2>
-          </div>
-          <div className="education-intro-copy">
-            <p>
-              Prerna Foundation works to make education more meaningful and
-              accessible for children and young people. The focus is not only
-              on textbooks, but also on curiosity, confidence, creativity,
-              technology and learning through experience.
-            </p>
-            <p>
-              From classroom activities and digital learning to workshops,
-              mentorship and community-based learning, every effort is designed
-              to help learners discover their strengths and participate in
-              shaping their own future.
-            </p>
-            <div className="education-highlight">
-              <strong>Our approach</strong>
-              Education + Experience + Technology + Mentorship = Opportunity
+    <>
+      <Header />
+
+      <main className="education-page">
+        <style>{`
+          :root {
+            --edu-ink: #102c35;
+            --edu-muted: #61747a;
+            --edu-teal: #0c6b68;
+            --edu-soft: #eaf5f3;
+            --edu-gold: #d5a447;
+            --edu-line: #dce8e7;
+            --edu-white: #ffffff;
+          }
+
+          .education-page {
+            background: #f8fbfa;
+            color: var(--edu-ink);
+            overflow: hidden;
+          }
+
+          .edu-shell {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+          }
+
+          .edu-hero {
+            min-height: 650px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            isolation: isolate;
+            background: #0b2f35;
+            color: white;
+          }
+
+          .edu-hero video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+          }
+
+          .edu-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            background:
+              linear-gradient(90deg, rgba(7, 35, 40, .94) 0%, rgba(7, 35, 40, .76) 45%, rgba(7, 35, 40, .28) 100%),
+              linear-gradient(180deg, rgba(7, 35, 40, .12), rgba(7, 35, 40, .55));
+          }
+
+          .edu-hero::after {
+            content: "";
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            right: -170px;
+            bottom: -220px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 50%;
+            box-shadow: 0 0 0 90px rgba(255,255,255,.035), 0 0 0 180px rgba(255,255,255,.02);
+            z-index: -1;
+          }
+
+          .edu-hero-content {
+            max-width: 760px;
+            padding: 110px 0 100px;
+          }
+
+          .edu-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            backdrop-filter: blur(8px);
+            font-size: 12px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            font-weight: 700;
+          }
+
+          .edu-eyebrow span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--edu-gold);
+          }
+
+          .edu-hero h1 {
+            margin: 24px 0 18px;
+            max-width: 820px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(48px, 7vw, 88px);
+            line-height: .98;
+            letter-spacing: -.045em;
+            font-weight: 500;
+          }
+
+          .edu-hero h1 em {
+            color: #d9eee9;
+            font-style: normal;
+          }
+
+          .edu-hero p {
+            max-width: 650px;
+            margin: 0;
+            color: rgba(255,255,255,.82);
+            font-size: 18px;
+            line-height: 1.75;
+          }
+
+          .edu-intro {
+            padding: 105px 0 80px;
+          }
+
+          .edu-intro-grid {
+            display: grid;
+            grid-template-columns: .85fr 1.15fr;
+            gap: 70px;
+            align-items: end;
+          }
+
+          .edu-kicker {
+            color: var(--edu-teal);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+          }
+
+          .edu-intro h2,
+          .edu-section-heading h2 {
+            margin: 12px 0 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(36px, 5vw, 60px);
+            line-height: 1.05;
+            letter-spacing: -.035em;
+            font-weight: 500;
+          }
+
+          .edu-intro-copy {
+            color: var(--edu-muted);
+            font-size: 17px;
+            line-height: 1.85;
+          }
+
+          .edu-intro-copy strong {
+            color: var(--edu-ink);
+          }
+
+          .edu-programs {
+            padding: 35px 0 105px;
+          }
+
+          .edu-section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 30px;
+            margin-bottom: 42px;
+          }
+
+          .edu-section-heading p {
+            max-width: 430px;
+            margin: 0;
+            color: var(--edu-muted);
+            line-height: 1.7;
+          }
+
+          .edu-program-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+          }
+
+          .edu-card {
+            min-height: 285px;
+            padding: 30px;
+            border: 1px solid var(--edu-line);
+            border-radius: 24px;
+            background: white;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+          }
+
+          .edu-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(12,107,104,.35);
+            box-shadow: 0 18px 50px rgba(16,44,53,.09);
+          }
+
+          .edu-number {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--edu-soft);
+            color: var(--edu-teal);
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 55px;
+          }
+
+          .edu-card h3 {
+            margin: 0 0 12px;
+            font-size: 21px;
+            letter-spacing: -.02em;
+          }
+
+          .edu-card p {
+            margin: 0;
+            color: var(--edu-muted);
+            line-height: 1.7;
+            font-size: 14px;
+          }
+
+          .edu-feature {
+            margin: 0 0 105px;
+            padding: 70px 0;
+            background: var(--edu-ink);
+            color: white;
+          }
+
+          .edu-feature-grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 70px;
+            align-items: center;
+          }
+
+          .edu-feature h2 {
+            max-width: 620px;
+            margin: 14px 0 20px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(36px, 5vw, 58px);
+            line-height: 1.05;
+            font-weight: 500;
+          }
+
+          .edu-feature p {
+            max-width: 600px;
+            color: rgba(255,255,255,.7);
+            line-height: 1.8;
+          }
+
+          .edu-feature-list {
+            display: grid;
+            gap: 12px;
+          }
+
+          .edu-feature-item {
+            padding: 19px 20px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 16px;
+            background: rgba(255,255,255,.045);
+            font-size: 15px;
+          }
+
+          .edu-feature-item b {
+            display: block;
+            margin-bottom: 5px;
+          }
+
+          .edu-feature-item span {
+            color: rgba(255,255,255,.6);
+            font-size: 13px;
+          }
+
+          .edu-gallery {
+            padding: 0 0 110px;
+          }
+
+          .edu-gallery-grid {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr .8fr;
+            grid-auto-rows: 250px;
+            gap: 14px;
+          }
+
+          .edu-photo {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            background: #dfeae8;
+          }
+
+          .edu-photo:first-child {
+            grid-row: span 2;
+          }
+
+          .edu-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .5s ease;
+          }
+
+          .edu-photo:hover img {
+            transform: scale(1.045);
+          }
+
+          .edu-photo::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 45%;
+            background: linear-gradient(transparent, rgba(0,0,0,.45));
+            pointer-events: none;
+          }
+
+          .edu-videos {
+            padding: 90px 0 110px;
+            background: #eef6f4;
+          }
+
+          .edu-video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+          }
+
+          .edu-video-card {
+            overflow: hidden;
+            border-radius: 22px;
+            background: white;
+            border: 1px solid var(--edu-line);
+          }
+
+          .edu-video-card video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            background: #183b40;
+          }
+
+          .edu-video-copy {
+            padding: 22px;
+          }
+
+          .edu-video-copy h3 {
+            margin: 0 0 8px;
+            font-size: 19px;
+          }
+
+          .edu-video-copy p {
+            margin: 0;
+            color: var(--edu-muted);
+            font-size: 14px;
+            line-height: 1.65;
+          }
+
+          .edu-quote {
+            padding: 105px 0;
+            text-align: center;
+          }
+
+          .edu-quote-mark {
+            color: var(--edu-gold);
+            font-family: Georgia, serif;
+            font-size: 70px;
+            line-height: .5;
+          }
+
+          .edu-quote blockquote {
+            max-width: 880px;
+            margin: 25px auto 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(28px, 4vw, 48px);
+            line-height: 1.25;
+            letter-spacing: -.025em;
+          }
+
+          .edu-quote p {
+            margin: 22px 0 0;
+            color: var(--edu-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            font-weight: 700;
+          }
+
+          .edu-cta {
+            margin-bottom: 100px;
+            padding: 65px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #0c6b68, #164a54);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 35px;
+          }
+
+          .edu-cta h2 {
+            margin: 0 0 10px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(34px, 4vw, 52px);
+            font-weight: 500;
+          }
+
+          .edu-cta p {
+            max-width: 650px;
+            margin: 0;
+            color: rgba(255,255,255,.75);
+            line-height: 1.7;
+          }
+
+          .edu-cta a {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 23px;
+            border-radius: 999px;
+            background: white;
+            color: var(--edu-ink);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+          }
+
+          @media (max-width: 900px) {
+            .edu-intro-grid,
+            .edu-feature-grid {
+              grid-template-columns: 1fr;
+              gap: 35px;
+            }
+
+            .edu-program-grid,
+            .edu-video-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
+            .edu-gallery-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
+            .edu-photo:first-child {
+              grid-row: span 1;
+            }
+
+            .edu-cta {
+              padding: 42px 30px;
+              align-items: flex-start;
+              flex-direction: column;
+            }
+          }
+
+          @media (max-width: 620px) {
+            .edu-shell {
+              width: min(100% - 28px, 1180px);
+            }
+
+            .edu-hero {
+              min-height: 600px;
+            }
+
+            .edu-hero-content {
+              padding: 90px 0 80px;
+            }
+
+            .edu-program-grid,
+            .edu-video-grid,
+            .edu-gallery-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .edu-gallery-grid {
+              grid-auto-rows: 280px;
+            }
+
+            .edu-section-heading {
+              display: block;
+            }
+
+            .edu-section-heading p {
+              margin-top: 18px;
+            }
+
+            .edu-card {
+              min-height: auto;
+            }
+
+            .edu-number {
+              margin-bottom: 35px;
+            }
+          }
+        `}</style>
+
+        <section className="edu-hero">
+          <video autoPlay muted loop playsInline preload="metadata">
+            <source src="/images/education-hero.mp4" type="video/mp4" />
+          </video>
+
+          <div className="edu-shell">
+            <div className="edu-hero-content">
+              <div className="edu-eyebrow">
+                <span />
+                Education &amp; Skill Development
+              </div>
+
+              <h1>
+                Learning that creates
+                <br />
+                <em>new possibilities.</em>
+              </h1>
+
+              <p>
+                शिक्षण म्हणजे केवळ ज्ञान मिळवणे नाही; ते विद्यार्थ्यांना
+                आत्मविश्वास, कौशल्ये आणि स्वतःचे भविष्य घडवण्याची संधी देणे आहे.
+                Prerna Foundation च्या Education &amp; Skill Development उपक्रमांतून
+                learning ला practical skills आणि career readiness ची जोड दिली जाते.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="education-stats">
-        <div className="education-shell">
-          <div className="education-stat-grid">
-            <div className="education-stat"><strong>01</strong><span>Learning Spaces</span></div>
-            <div className="education-stat"><strong>02</strong><span>Digital Learning</span></div>
-            <div className="education-stat"><strong>03</strong><span>Skill Activities</span></div>
-            <div className="education-stat"><strong>04</strong><span>Mentorship</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="education-gallery">
-        <div className="education-shell">
-          <div className="education-section-head">
+        <section className="edu-intro">
+          <div className="edu-shell edu-intro-grid">
             <div>
-              <div className="education-kicker">Photo Stories</div>
-              <h2>Moments that<br />make learning real.</h2>
+              <div className="edu-kicker">Our Education Focus</div>
+              <h2>शिक्षणातून कौशल्य, कौशल्यातून संधी.</h2>
             </div>
-            <p>
-              Explore moments from classrooms, workshops, digital learning,
-              activities and interactions that make education engaging.
-            </p>
-          </div>
 
-          <div className="education-photo-grid">
-            {educationPhotos.map((photo) => (
-              <figure className="education-photo-card" key={photo.src}>
-                <img src={photo.src} alt={photo.alt} loading="lazy" />
-                <figcaption className="education-photo-caption">
-                  {photo.title}
-                </figcaption>
-              </figure>
-            ))}
+            <div className="edu-intro-copy">
+              <p>
+                <strong>Prerna Foundation</strong> चा शिक्षणविषयक प्रयत्न
+                विद्यार्थ्यांना quality learning environment, digital exposure
+                आणि practical skill development मिळवून देण्यावर केंद्रित आहे.
+              </p>
+              <p>
+                विद्यार्थ्यांना शिकताना technology वापरणे, नवीन कौशल्ये आत्मसात
+                करणे, communication सुधारणे आणि त्यांच्या career साठी आवश्यक
+                confidence विकसित करणे यासाठी विविध learning activities घेतल्या
+                जातात.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="education-videos">
-        <div className="education-shell">
-          <div className="education-section-head">
+        <section className="edu-programs">
+          <div className="edu-shell">
+            <div className="edu-section-heading">
+              <div>
+                <div className="edu-kicker">What We Work On</div>
+                <h2>Education &amp; Skills</h2>
+              </div>
+              <p>
+                विद्यार्थ्यांच्या शैक्षणिक आणि कौशल्यविकासाच्या प्रवासाला
+                practical आणि आधुनिक learning opportunities ची जोड.
+              </p>
+            </div>
+
+            <div className="edu-program-grid">
+              {programs.map((item) => (
+                <article className="edu-card" key={item.title}>
+                  <div className="edu-number">{item.icon}</div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="edu-feature">
+          <div className="edu-shell edu-feature-grid">
             <div>
-              <div className="education-kicker">Video Stories</div>
-              <h2>See learning<br />in action.</h2>
+              <div className="edu-kicker" style={{ color: "#d5a447" }}>
+                Learning Beyond The Classroom
+              </div>
+              <h2>शिकणे, करून पाहणे आणि पुढे जाणे.</h2>
+              <p>
+                आधुनिक शिक्षणामध्ये theoretical knowledge सोबत practical
+                experience देखील महत्त्वाचा आहे. म्हणून digital learning,
+                hands-on activities, workshops आणि skill sessions यांचा वापर
+                विद्यार्थ्यांच्या learning journey मध्ये केला जातो.
+              </p>
             </div>
-            <p>
-              Short visual stories can show the energy, participation and
-              experiences behind our education work.
-            </p>
-          </div>
 
-          <div className="education-video-grid">
-            {educationVideos.map((video) => (
-              <article className="education-video-card" key={video.src}>
-                <video controls preload="metadata" poster="/images/education-video-poster.jpg">
-                  <source src={video.src} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-                <div className="education-video-body">
-                  <h3>{video.title}</h3>
-                  <p>{video.text}</p>
+            <div className="edu-feature-list">
+              <div className="edu-feature-item">
+                <b>Digital Learning</b>
+                <span>Technology च्या माध्यमातून learning opportunities.</span>
+              </div>
+              <div className="edu-feature-item">
+                <b>Practical Training</b>
+                <span>प्रत्यक्ष करून शिकण्यावर भर.</span>
+              </div>
+              <div className="edu-feature-item">
+                <b>Career Readiness</b>
+                <span>भविष्यातील शिक्षण आणि career साठी आवश्यक skills.</span>
+              </div>
+              <div className="edu-feature-item">
+                <b>Confidence Building</b>
+                <span>Communication, presentation आणि personality development.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="edu-gallery">
+          <div className="edu-shell">
+            <div className="edu-section-heading">
+              <div>
+                <div className="edu-kicker">Learning In Action</div>
+                <h2>Our Learning Moments</h2>
+              </div>
+              <p>
+                विद्यार्थ्यांच्या learning, training आणि skill development
+                activities मधील काही क्षण.
+              </p>
+            </div>
+
+            <div className="edu-gallery-grid">
+              {gallery.map((src, index) => (
+                <div className="edu-photo" key={src}>
+                  <img
+                    src={src}
+                    alt={`Education and skill development activity ${index + 1}`}
+                    loading={index > 1 ? "lazy" : "eager"}
+                  />
                 </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="education-quote">
-        <div className="education-shell">
-          <blockquote>
-            “Education is not only about what a child learns. It is about what
-            a child begins to believe is possible.”
-            <cite>Prerna Foundation</cite>
-          </blockquote>
-        </div>
-      </section>
-
-      <section className="education-cta">
-        <div className="education-shell">
-          <div className="education-cta-box">
-            <div>
-              <h2>Be part of the learning journey.</h2>
-              <p>Explore our work and see how you can contribute.</p>
+              ))}
             </div>
-            <Link className="education-cta-link" href="/contact">
-              Get Involved →
-            </Link>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        <section className="edu-videos">
+          <div className="edu-shell">
+            <div className="edu-section-heading">
+              <div>
+                <div className="edu-kicker">Videos</div>
+                <h2>Learning In Motion</h2>
+              </div>
+              <p>
+                Training sessions, workshops आणि digital learning activities
+                प्रत्यक्ष पाहण्यासाठी video highlights.
+              </p>
+            </div>
+
+            <div className="edu-video-grid">
+              {videos.map((video) => (
+                <article className="edu-video-card" key={video.src}>
+                  <video controls preload="metadata" playsInline>
+                    <source src={video.src} type="video/mp4" />
+                  </video>
+                  <div className="edu-video-copy">
+                    <h3>{video.title}</h3>
+                    <p>{video.text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="edu-quote">
+          <div className="edu-shell">
+            <div className="edu-quote-mark">“</div>
+            <blockquote>
+              प्रत्येक विद्यार्थ्याला शिकण्याची संधी, कौशल्य विकसित करण्याची
+              जागा आणि स्वतःचे भविष्य घडवण्याचा आत्मविश्वास मिळावा.
+            </blockquote>
+            <p>Prerna Foundation • Education &amp; Skill Development</p>
+          </div>
+        </section>
+
+        <section className="edu-shell">
+          <div className="edu-cta">
+            <div>
+              <h2>शिक्षणाच्या प्रवासात सहभागी व्हा.</h2>
+              <p>
+                विद्यार्थ्यांसाठी education, digital learning आणि skill
+                development च्या संधी अधिक सक्षम करण्यासाठी तुमचा सहभाग
+                महत्त्वाचा आहे.
+              </p>
+            </div>
+            <a href="/contact">Get Involved →</a>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
   );
 }

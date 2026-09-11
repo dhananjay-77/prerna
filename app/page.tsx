@@ -9,6 +9,7 @@ const areas = [
     title: "Education",
     text: "Creating access and opportunity through learning and knowledge.",
     image: "/images/education.jpg",
+    href: "/education",
   },
   {
     number: "02",
@@ -16,6 +17,7 @@ const areas = [
     title: "Health",
     text: "Supporting healthier lives and informed choices for communities.",
     image: "/images/health.jpg",
+    href: "/health",
   },
   {
     number: "03",
@@ -23,6 +25,7 @@ const areas = [
     title: "Skill Development",
     text: "Building skills for employability, entrepreneurship and self-reliance.",
     image: "/images/skill-development.jpg",
+    href: "/skill-development",
   },
   {
     number: "04",
@@ -30,6 +33,7 @@ const areas = [
     title: "Women Empowerment",
     text: "Creating tools, opportunities and platforms for independent lives.",
     image: "/images/women-empowerment.jpg",
+    href: "/women-empowerment",
   },
   {
     number: "05",
@@ -37,6 +41,7 @@ const areas = [
     title: "Natural Farming",
     text: "Promoting sustainable and environment-friendly agricultural practices.",
     image: "/images/natural-farming.jpg",
+    href: "/natural-farming",
   },
   {
     number: "06",
@@ -44,6 +49,7 @@ const areas = [
     title: "Water Conservation",
     text: "Restoring water bodies and building resilient rural communities.",
     image: "/images/water-conservation.jpeg",
+    href: "/water-conservation",
   },
   {
     number: "07",
@@ -51,6 +57,7 @@ const areas = [
     title: "Environment",
     text: "Encouraging environmental responsibility and sustainable development.",
     image: "/images/environment.jpeg",
+    href: "/environment",
   },
 ];
 
@@ -405,7 +412,7 @@ export default async function Home() {
 
                     <p>{area.text}</p>
 
-                    <Link href="/about-us">
+                    <Link href={area.href}>
                       Read more
                       <span>→</span>
                     </Link>
@@ -661,16 +668,7 @@ export default async function Home() {
             </div>
 
             {(() => {
-              // Normalize program identity so the same story is not rendered twice
-              // when the CMS contains duplicate records with different slugs,
-              // punctuation, or spacing.
-              const normalizeProgramKey = (value: any) =>
-                String(value ?? "")
-                  .normalize("NFKC")
-                  .toLowerCase()
-                  .replace(/[^\\p{L}\\p{N}]+/gu, "");
-
-              const dynamicProgramsRaw = (programs || []).map((program: any) => ({
+              const dynamicPrograms = (programs || []).map((program: any) => ({
                 slug: program.slug,
                 title: program.title,
                 category: program.category || "Program",
@@ -682,46 +680,17 @@ export default async function Home() {
                 href: `/programs/${program.slug}`,
               }));
 
-              // First remove duplicates coming directly from the CMS/database.
-              // Same slug OR same normalized title = one program.
-              const dynamicPrograms = dynamicProgramsRaw.filter(
-                (program: any, index: number, list: any[]) => {
-                  const slugKey = normalizeProgramKey(program.slug);
-                  const titleKey = normalizeProgramKey(program.title);
-
-                  return index === list.findIndex((item: any) => {
-                    const itemSlugKey = normalizeProgramKey(item.slug);
-                    const itemTitleKey = normalizeProgramKey(item.title);
-
-                    return (
-                      (slugKey && itemSlugKey && slugKey === itemSlugKey) ||
-                      (titleKey && itemTitleKey && titleKey === itemTitleKey)
-                    );
-                  });
-                }
-              );
-
-              // Build keys from the final CMS list so static fallback stories
-              // cannot create a second card for an already-loaded CMS story.
-              const dynamicProgramKeys = new Set(
-                dynamicPrograms.flatMap((program: any) =>
-                  [
-                    normalizeProgramKey(program.slug),
-                    normalizeProgramKey(program.title),
-                  ].filter(Boolean)
-                )
-              );
-
               const merged = [
                 ...dynamicPrograms,
-                ...programStories.filter((staticProgram) => {
-                  const staticKeys = [
-                    normalizeProgramKey(staticProgram.slug),
-                    normalizeProgramKey(staticProgram.title),
-                  ].filter(Boolean);
-
-                  return !staticKeys.some((key) => dynamicProgramKeys.has(key));
-                }),
+                ...programStories.filter(
+                  (staticProgram) =>
+                    !dynamicPrograms.some(
+                      (dynamicProgram) =>
+                        dynamicProgram.slug === staticProgram.slug ||
+                        dynamicProgram.title?.trim().toLowerCase() ===
+                          staticProgram.title?.trim().toLowerCase()
+                    )
+                ),
               ];
 
               return (
