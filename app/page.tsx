@@ -192,7 +192,7 @@ const programStories = [
 
 
 export default async function Home() {
-  const { stats, programs, partners, goals } =
+  const { stats, programs, projects, partners, goals } =
     await publicContent();
 
   const metrics =
@@ -647,137 +647,114 @@ return (
 
 
         {/* =========================================================
-            PROGRAMS & STORIES
+            FROM IDEAS TO IMPACT / STORIES
         ========================================================= */}
 
-        <section className="section programs-section">
+        {/* <section className="section stories-section">
           <div className="shell">
             <div className="section-heading">
               <div>
-                <span className="eyebrow">Programs & Stories</span>
+                <span className="eyebrow">From ideas to impact</span>
                 <h2>
-                  From ideas
+                  Stories that
                   <br />
-                  to <em>impact.</em>
+                  <em>create change.</em>
                 </h2>
               </div>
 
-              <Link className="view-all" href="/programs">
-                View all programs →
+              <span className="heading-number">06 / 09</span>
+            </div>
+
+            <div className="stories-grid">
+              {programStories
+                .filter((program) =>
+                  ["jal-dhara", "sies", "shakti"].includes(program.slug)
+                )
+                .map((program, index) => (
+                  <article className="story-card" key={program.slug}>
+                    <div className="story-image">
+                      <img src={program.image} alt={program.title} />
+                      <span>{program.category}</span>
+                    </div>
+
+                    <div className="story-content">
+                      <small>Prerna Foundation</small>
+                      <h3>{program.title}</h3>
+                      <p>{program.story}</p>
+                      <Link href={program.href || "/projects"}>
+                        Read full story <span>→</span>
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+            </div>
+          </div>
+        </section> */}
+
+        {/* =========================================================
+            PROJECTS — SEPARATE SECTION
+        ========================================================= */}
+
+        <section className="section projects-home-section">
+          <div className="shell">
+            <div className="section-heading">
+              <div>
+                <span className="eyebrow">Our Projects</span>
+                <h2>
+                  Work on
+                  <br />
+                  the <em>ground.</em>
+                </h2>
+              </div>
+
+              <Link className="view-all" href="/projects">
+                View all projects →
               </Link>
             </div>
 
-            {(() => {
-              const normalizeProgramKey = (value: unknown) =>
-                String(value ?? "")
-                  .normalize("NFKC")
-                  .toLowerCase()
-                  .replace(/[^\\p{L}\\p{N}]+/gu, "");
+            <div className="home-projects-grid">
+              {Array.isArray(projects) && projects.length > 0 ? (
+                projects.slice(0, 6).map((project: any, index: number) => (
+                  <article className="home-project-card" key={project.slug || project._id || index}>
+                    <div className="home-project-image">
+                      <img
+                        src={
+                          project.image ||
+                          ["/images/water-conservation.jpg",
+                           "/images/natural-farming.jpg",
+                           "/images/environment.jpg",
+                           "/images/skill-development.jpg",
+                           "/images/women-empowerment.jpg",
+                           "/images/education.jpg"][index % 6]
+                        }
+                        alt={project.name || project.title || "Prerna Foundation project"}
+                        loading={index > 2 ? "lazy" : "eager"}
+                      />
+                      {project.status && <span>{project.status}</span>}
+                    </div>
 
-              const dynamicPrograms = Array.isArray(programs)
-                ? programs
-                    .filter((program: any) => program && (program.slug || program.title))
-                    .map((program: any) => ({
-                      slug: String(program.slug ?? "").trim(),
-                      title: String(program.title ?? "Program").trim(),
-                      category: String(program.category ?? "Program"),
-                      date: program.date,
-                      image: program.image,
-                      story: program.content
-                        ? String(program.content)
-                            .replace(/<[^>]*>/g, "")
-                            .replace(/\\s+/g, " ")
-                            .trim()
-                        : "प्रेरणा फाउंडेशनच्या कार्याची ही एक महत्त्वाची कथा आहे. समुदायाच्या सहभागातून शाश्वत आणि अर्थपूर्ण बदल घडविण्याचा प्रयत्न या उपक्रमातून केला जातो.",
-                      href: program.slug
-                        ? `/programs/${program.slug}`
-                        : "/programs",
-                    }))
-                : [];
-
-              // Remove duplicates coming from the CMS itself.
-              const uniqueDynamicPrograms = dynamicPrograms.filter(
-                (program: any, index: number, list: any[]) => {
-                  const slugKey = normalizeProgramKey(program.slug);
-                  const titleKey = normalizeProgramKey(program.title);
-
-                  return (
-                    index ===
-                    list.findIndex((item: any) => {
-                      const itemSlugKey = normalizeProgramKey(item.slug);
-                      const itemTitleKey = normalizeProgramKey(item.title);
-
-                      return (
-                        (slugKey && itemSlugKey === slugKey) ||
-                        (titleKey && itemTitleKey === titleKey)
-                      );
-                    })
-                  );
-                }
-              );
-
-              // Add static fallback stories only when the same story is not already in the CMS.
-              const dynamicKeys = new Set(
-                uniqueDynamicPrograms.flatMap((program: any) => [
-                  normalizeProgramKey(program.slug),
-                  normalizeProgramKey(program.title),
-                ].filter(Boolean))
-              );
-
-              const merged = [
-                ...uniqueDynamicPrograms,
-                ...programStories.filter((staticProgram) => {
-                  const slugKey = normalizeProgramKey(staticProgram.slug);
-                  const titleKey = normalizeProgramKey(staticProgram.title);
-
-                  return (
-                    !dynamicKeys.has(slugKey) &&
-                    !dynamicKeys.has(titleKey)
-                  );
-                }),
-              ];
-
-              return (
-                <div className="programs-grid programs-grid-all">
-                  {merged.map((program: any, index: number) => (
-                    <article className="program-card" key={program.slug || `${program.title}-${index}`}>
-                      <div className="program-image">
-                        <img
-                          src={program.image || `/images/program-${(index % 3) + 1}.jpg`}
-                          alt={program.title}
-                          loading={index > 2 ? "lazy" : "eager"}
-                        />
-                        <span>{program.category || "Program"}</span>
-                      </div>
-
-                      <div className="program-content">
-                        <small>
-                          {program.date
-                            ? new Date(program.date).toLocaleDateString("en-IN", {
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric",
-                              })
-                            : "Prerna Foundation"}
-                        </small>
-
-                        <h3>{program.title}</h3>
-
-                        <p>
-                          {(program.story || "").slice(0, 260)}
-                          {(program.story || "").length > 260 ? "…" : ""}
-                        </p>
-
-                        <Link href={program.href || "/programs"}>
-                          Read full story
-                          <span>→</span>
-                        </Link>
-                      </div>
-                    </article>
-                  ))}
+                    <div className="home-project-content">
+                      <small>{project.category || "Project"}</small>
+                      <h3>{project.name || project.title}</h3>
+                      <p>
+                        {project.shortDescription ||
+                          project.description ||
+                          "A Prerna Foundation initiative focused on meaningful and sustainable community impact."}
+                      </p>
+                      <Link href={`/${project.slug}`}>
+                        Explore project <span>↗</span>
+                      </Link>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="projects-empty">
+                  <strong>Projects are being updated.</strong>
+                  <p>Explore our complete work and initiatives.</p>
+                  <Link href="/projects">Explore projects →</Link>
                 </div>
-              );
-            })()}
+              )}
+            </div>
           </div>
         </section>
 
@@ -1648,6 +1625,165 @@ return (
           font-weight: 600;
         }
 
+        /* FROM IDEAS TO IMPACT */
+
+        .stories-section {
+          padding-top: 110px;
+          padding-bottom: 120px;
+          background: #fff;
+        }
+
+        .stories-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .story-card,
+        .home-project-card {
+          background: #fff;
+          border: 1px solid rgba(0,0,0,.08);
+          overflow: hidden;
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .story-card:hover,
+        .home-project-card:hover {
+          transform: translateY(-7px);
+          box-shadow: 0 25px 50px rgba(0,0,0,.08);
+        }
+
+        .story-image,
+        .home-project-image {
+          height: 270px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .story-image img,
+        .home-project-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform .6s ease;
+        }
+
+        .story-card:hover .story-image img,
+        .home-project-card:hover .home-project-image img {
+          transform: scale(1.06);
+        }
+
+        .story-image > span,
+        .home-project-image > span {
+          position: absolute;
+          top: 17px;
+          left: 17px;
+          background: #12352f;
+          color: #fff;
+          padding: 7px 11px;
+          font-size: .58rem;
+          text-transform: uppercase;
+          letter-spacing: .1em;
+        }
+
+        .story-content,
+        .home-project-content {
+          padding: 28px;
+        }
+
+        .story-content small,
+        .home-project-content small {
+          font-size: .62rem;
+          letter-spacing: .1em;
+          opacity: .45;
+          text-transform: uppercase;
+        }
+
+        .story-content h3,
+        .home-project-content h3 {
+          margin: 14px 0;
+          font-size: 1.45rem;
+          line-height: 1.08;
+          letter-spacing: -.04em;
+        }
+
+        .story-content p,
+        .home-project-content p {
+          line-height: 1.7;
+          font-size: .88rem;
+          opacity: .62;
+          min-height: 105px;
+          margin-bottom: 18px;
+        }
+
+        .story-content a,
+        .home-project-content a {
+          display: inline-flex;
+          gap: 8px;
+          text-decoration: none;
+          font-size: .75rem;
+          font-weight: 600;
+        }
+
+        .story-content a span,
+        .home-project-content a span {
+          transition: transform .2s ease;
+        }
+
+        .story-content a:hover span,
+        .home-project-content a:hover span {
+          transform: translateX(4px);
+        }
+
+        /* PROJECTS */
+
+        .projects-home-section {
+          padding-top: 110px;
+          padding-bottom: 120px;
+          background: #e9efe5;
+        }
+
+        .home-projects-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .home-project-card {
+          background: #fff;
+        }
+
+        .home-project-image > span {
+          left: auto;
+          right: 17px;
+          background: #d7e85f;
+          color: #12352f;
+        }
+
+        .projects-empty {
+          grid-column: 1 / -1;
+          padding: 60px 30px;
+          background: #fff;
+          text-align: center;
+          border: 1px solid rgba(0,0,0,.08);
+        }
+
+        .projects-empty strong {
+          display: block;
+          font-size: 1.4rem;
+        }
+
+        .projects-empty p {
+          opacity: .6;
+          margin: 10px 0 20px;
+        }
+
+        .projects-empty a {
+          text-decoration: none;
+          font-weight: 600;
+          font-size: .8rem;
+        }
+
         /* FUTURE */
 
         .future-section {
@@ -1861,7 +1997,8 @@ return (
           }
 
           .areas-grid,
-          .programs-grid {
+          .stories-grid,
+          .home-projects-grid {
             grid-template-columns: repeat(2, 1fr);
           }
 
@@ -1959,7 +2096,8 @@ return (
           }
 
           .areas-grid,
-          .programs-grid,
+          .stories-grid,
+          .home-projects-grid,
           .partners-grid {
             grid-template-columns: 1fr;
           }
