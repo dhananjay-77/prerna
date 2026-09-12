@@ -1,0 +1,769 @@
+.contactsAdmin,
+.contactsAdmin * {
+  box-sizing: border-box;
+}
+
+.contactsAdmin {
+  min-height: 100vh;
+  background: #f3f7f4;
+  color: #102a22;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.contactsShell {
+  width: min(1180px, calc(100% - 42px));
+  margin: 0 auto;
+}
+
+.contactsHeader {
+  background: #08382d;
+  color: #fff;
+}
+
+.contactsHeaderInner {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contactsBrand {
+  display: block;
+  color: #bfe33a;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+}
+
+.contactsHeader strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.contactsBack {
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.contactsBack:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.contactsHero {
+  padding: 68px 0 42px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.contactsEyebrow {
+  display: block;
+  color: #08784d;
+  font-size: 9px;
+  letter-spacing: 0.17em;
+  font-weight: 900;
+}
+
+.contactsHero h1 {
+  margin: 14px 0 15px;
+  font-family: Georgia, serif;
+  font-size: clamp(55px, 7vw, 92px);
+  line-height: 0.87;
+  letter-spacing: -0.065em;
+}
+
+.contactsHero h1 em {
+  color: #91a19a;
+  font-style: normal;
+}
+
+.contactsHero p {
+  max-width: 650px;
+  margin: 0;
+  color: #66766e;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.contactsHeroMark {
+  min-width: 145px;
+  padding-top: 13px;
+  border-top: 1px solid #ccd8d1;
+  display: flex;
+  justify-content: space-between;
+  color: #87958e;
+}
+
+.contactsHeroMark span {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  font-weight: 800;
+}
+
+.contactsHeroMark strong {
+  font-family: Georgia, serif;
+  font-size: 35px;
+}
+
+.contactsKpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.contactsKpis article {
+  background: #fff;
+  border: 1px solid #dce6e0;
+  border-radius: 13px;
+  padding: 21px 23px;
+  box-shadow: 0 8px 25px rgba(17, 50, 39, 0.04);
+}
+
+.contactsKpis span,
+.contactsKpis small {
+  display: block;
+  color: #718078;
+  font-size: 10px;
+}
+
+.contactsKpis strong {
+  display: block;
+  margin: 7px 0 3px;
+  font-family: Georgia, serif;
+  font-size: 39px;
+  letter-spacing: -0.05em;
+}
+
+.contactsToolbar {
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #dce6e0;
+  border-radius: 13px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.contactsSearch {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #f5f8f6;
+  border: 1px solid #e1e8e3;
+  border-radius: 9px;
+  padding: 0 12px;
+}
+
+.contactsSearch span {
+  font-size: 20px;
+  color: #789087;
+}
+
+.contactsSearch input {
+  width: 100%;
+  height: 43px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 12px;
+  color: #18372d;
+}
+
+.contactsFilters {
+  display: flex;
+  gap: 7px;
+}
+
+.contactsFilters button {
+  border: 1px solid #d7e1db;
+  background: #fff;
+  color: #52645b;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.contactsFilters button:hover {
+  background: #f1f6f3;
+}
+
+.active {
+  background: #0b4b3b !important;
+  color: #fff !important;
+  border-color: #0b4b3b !important;
+}
+
+.refreshButton {
+  background: #d7ef42 !important;
+  color: #143528 !important;
+  border-color: #d7ef42 !important;
+}
+
+.contactsFilters button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.contactsWorkspace {
+  display: grid;
+  grid-template-columns: minmax(390px, 0.95fr) minmax(0, 1.25fr);
+  gap: 16px;
+  padding-bottom: 60px;
+}
+
+.contactsList,
+.requestDetail {
+  background: #fff;
+  border: 1px solid #dce6e0;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(17, 50, 39, 0.04);
+}
+
+.contactsListHead {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e5ebe7;
+  background: #fbfcfb;
+}
+
+.contactsListHead span {
+  display: block;
+  color: #08784d;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  font-weight: 900;
+}
+
+.contactsListHead strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.requestRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 39px 1fr auto;
+  gap: 11px;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #edf1ee;
+  background: #fff;
+  padding: 16px 18px;
+  cursor: pointer;
+}
+
+.requestRow:hover,
+.selected {
+  background: #f1f7f4 !important;
+}
+
+.requestAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #dcefe7;
+  color: #086544;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.requestMain {
+  min-width: 0;
+}
+
+.requestMain strong,
+.requestMain small,
+.requestMain b {
+  display: block;
+}
+
+.requestMain strong {
+  font-size: 13px;
+}
+
+.requestMain small {
+  margin-top: 3px;
+  color: #839089;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.requestMain b {
+  margin-top: 8px;
+  color: #203d33;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.requestMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  color: #829088;
+}
+
+.requestMeta small {
+  font-size: 9px;
+}
+
+.requestMeta time {
+  font-size: 9px;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f2a62b;
+}
+
+.statusReplied {
+  background: #0a9a61;
+}
+
+.statusPending {
+  background: #e6a322;
+}
+
+.statusNew {
+  background: #1687d5;
+}
+
+.requestDetail {
+  padding: 29px;
+}
+
+.detailTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e1e8e3;
+}
+
+.detailTop h2 {
+  margin: 9px 0 4px;
+  font-family: Georgia, serif;
+  font-size: 42px;
+  letter-spacing: -0.055em;
+}
+
+.detailTop p {
+  margin: 0;
+  color: #85928c;
+  font-size: 10px;
+}
+
+.statusBadge {
+  height: max-content;
+  padding: 8px 11px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.badgeReplied {
+  background: #e8f8f0;
+  color: #087348;
+}
+
+.badgePending {
+  background: #fff5dd;
+  color: #9b6800;
+}
+
+.badgeNew {
+  background: #e8f3ff;
+  color: #126da9;
+}
+
+.detailIdentity {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: #e2e9e5;
+  margin: 22px 0;
+}
+
+.detailIdentity > a,
+.detailIdentity > div {
+  padding: 15px;
+  background: #f8faf9;
+  text-decoration: none;
+  color: #15382c;
+}
+
+.detailIdentity span,
+.detailSubject > span,
+.messageBox > span,
+.addressBox > span,
+.replyPanel span,
+.replyTitle span {
+  display: block;
+  color: #7a8982;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.detailIdentity strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.detailSubject {
+  padding: 0 0 20px;
+  border-bottom: 1px solid #e2e9e5;
+}
+
+.detailSubject h3 {
+  margin: 8px 0 0;
+  font-size: 21px;
+  letter-spacing: -0.025em;
+}
+
+.messageBox {
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: 11px;
+  background: #f5f8f6;
+}
+
+.messageBox p,
+.addressBox p {
+  margin: 9px 0 0;
+  color: #4e6259;
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.addressBox {
+  margin-top: 13px;
+  padding: 17px;
+  border: 1px solid #e2e9e5;
+  border-radius: 10px;
+}
+
+.previousReplies {
+  margin-top: 20px;
+  border: 1px solid #dce6e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.replyTitle {
+  padding: 15px 17px;
+  background: #f6f9f7;
+  border-bottom: 1px solid #e1e8e3;
+}
+
+.replyTitle strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.replyItem {
+  padding: 15px 17px;
+  border-bottom: 1px solid #edf1ee;
+}
+
+.replyItem:last-child {
+  border-bottom: 0;
+}
+
+.replyItem > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.replyItem > div strong {
+  font-size: 11px;
+}
+
+.replyItem > div small {
+  color: #87948e;
+  font-size: 9px;
+}
+
+.replyItem p {
+  margin: 9px 0;
+  color: #42574e;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.replyItem > span {
+  display: inline-block;
+  color: #087348;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.replyPanel {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 13px;
+  background: #08382d;
+  color: #fff;
+}
+
+.replyPanelHead {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.replyPanel span {
+  color: #bfe33a;
+}
+
+.replyPanel strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.replyPanel p {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 10px;
+}
+
+.replyPanel textarea {
+  width: 100%;
+  min-height: 135px;
+  resize: vertical;
+  border: 1px solid #d4ded8;
+  border-radius: 10px;
+  background: #fff;
+  color: #16362b;
+  outline: none;
+  padding: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.replyPanel textarea:focus {
+  border-color: #bfe33a;
+  box-shadow: 0 0 0 3px rgba(191, 227, 58, 0.12);
+}
+
+.replyPanel button {
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 19px;
+  background: #bfe33a;
+  color: #12352a;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.replyPanel button:hover {
+  background: #d1f25a;
+}
+
+.replyPanel button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.replyError {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff0f1;
+  color: #a12c39;
+  font-size: 11px;
+}
+
+.replySuccess {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #e8f8f0;
+  color: #087348;
+  font-size: 11px;
+}
+
+.contactsEmpty {
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  color: #8a9791;
+  font-size: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.detailEmpty {
+  min-height: 500px;
+}
+
+.contactsError {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid #f0c9ce;
+  background: #fff1f3;
+  color: #a12c39;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.contactsSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d9e4de;
+  border-top-color: #08784d;
+  border-radius: 50%;
+  animation: contactsSpin 0.7s linear infinite;
+  margin-bottom: 9px;
+}
+
+@keyframes contactsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 850px) {
+  .contactsWorkspace {
+    grid-template-columns: 1fr;
+  }
+
+  .detailEmpty {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 650px) {
+  .contactsShell {
+    width: calc(100% - 26px);
+  }
+
+  .contactsHeaderInner {
+    min-height: 65px;
+  }
+
+  .contactsBack {
+    font-size: 10px;
+  }
+
+  .contactsHero {
+    padding: 45px 0 30px;
+  }
+
+  .contactsHeroMark {
+    display: none;
+  }
+
+  .contactsKpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contactsKpis article:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .contactsToolbar {
+    display: block;
+  }
+
+  .contactsFilters {
+    margin-top: 9px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .contactsFilters button {
+    white-space: nowrap;
+  }
+
+  .contactsWorkspace {
+    display: block;
+  }
+
+  .requestDetail {
+    margin-top: 14px;
+    padding: 20px;
+  }
+
+  .detailTop h2 {
+    font-size: 34px;
+  }
+
+  .detailIdentity {
+    grid-template-columns: 1fr;
+  }
+
+  .requestMeta {
+    display: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .contactsKpis {
+    grid-template-columns: 1fr;
+  }
+
+  .contactsKpis article:last-child {
+    grid-column: auto;
+  }
+
+  .requestRow {
+    grid-template-columns: 35px 1fr;
+  }
+
+  .requestAvatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .replyPanel {
+    padding: 16px;
+  }
+
+  .detailTop {
+    display: block;
+  }
+
+  .statusBadge {
+    display: inline-block;
+    margin-top: 12px;
+  }
+}

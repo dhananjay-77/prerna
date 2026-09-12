@@ -32,7 +32,7 @@ export function Header() {
           <Link href="/impact">Impact</Link>
           <Link href="/programs">Programs</Link>
           <Link href="/gallery">Gallery</Link>
-          <Link href="/contact-us">Contact</Link>
+          <Link href="/contact">Contact</Link>
           <Link className="donate" href="/donate-now">
             Donate now
           </Link>
@@ -76,7 +76,7 @@ export function Header() {
             Gallery
           </Link>
 
-          <Link href="/contact-us" onClick={closeMenu}>
+          <Link href="/contact" onClick={closeMenu}>
             Contact
           </Link>
 

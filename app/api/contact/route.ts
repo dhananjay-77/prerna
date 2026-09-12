@@ -1,3 +1,30 @@
-import {NextResponse} from 'next/server';import {z} from 'zod';import {connectDB} from '@/lib/db';import {ContactRequest} from '@/models';import nodemailer from 'nodemailer';
-const schema=z.object({name:z.string().min(2).max(100),email:z.string().email(),phone:z.string().max(30),address:z.string().max(500).optional(),subject:z.string().min(2).max(200),type:z.string().max(50),message:z.string().min(5).max(5000)});
-export async function POST(r:Request){try{const body=schema.parse(await r.json());await connectDB();const item=await ContactRequest.create(body);if(process.env.SMTP_HOST&&process.env.ADMIN_EMAIL){const t=nodemailer.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:false,auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASSWORD}});await t.sendMail({from:process.env.FROM_EMAIL,to:process.env.ADMIN_EMAIL,subject:`New contact request: ${body.subject}`,text:`${body.name} (${body.email})\n${body.message}`})}return NextResponse.json({id:item._id},{status:201})}catch(e:any){return NextResponse.json({error:e?.issues?'Invalid form details':'Unable to save enquiry'},{status:400})}}
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import nodemailer from 'nodemailer';
+import { connectDB } from '@/lib/db';
+import { ContactRequest } from '@/models';
+
+const schema = z.object({ name: z.string().min(2).max(100), email: z.string().email(), phone: z.string().max(30), address: z.string().max(500).optional(), subject: z.string().min(2).max(200), type: z.string().max(50), message: z.string().min(5).max(5000) });
+const missingSmtpConfiguration = () => ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASSWORD', 'FROM_EMAIL', 'ADMIN_EMAIL'].filter((key) => !process.env[key]);
+
+export async function POST(request: Request) {
+  try {
+    const body = schema.parse(await request.json());
+    await connectDB();
+    const item = await ContactRequest.create(body);
+    let notificationStatus = 'not_configured';
+    if (!missingSmtpConfiguration().length) {
+      try {
+        const transporter = nodemailer.createTransport({ host: process.env.SMTP_HOST!, port: Number(process.env.SMTP_PORT || 587), secure: process.env.SMTP_SECURE === 'true', auth: { user: process.env.SMTP_USER!, pass: process.env.SMTP_PASSWORD! } });
+        await transporter.sendMail({ from: process.env.FROM_EMAIL!, to: process.env.ADMIN_EMAIL!, subject: `New contact request: ${body.subject}`, text: `${body.name} (${body.email})\n${body.message}` });
+        notificationStatus = 'sent';
+      } catch {
+        console.error('Contact notification email failed.');
+        notificationStatus = 'failed';
+      }
+    }
+    return NextResponse.json({ id: item._id, notificationStatus }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof z.ZodError ? 'Invalid form details' : 'Unable to save enquiry' }, { status: 400 });
+  }
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+import './admin.css';
 
 const sections = [
   'projects',
@@ -26,6 +27,13 @@ type Metric = {
   label: string;
   value: string;
   unit: string;
+  district: string;
+  talukas: string;
+  bodies: string;
+  silt: string;
+  beneficiaries: string;
+  land: string;
+  storage: string;
   enabled: boolean;
   includeInTotal: boolean;
 };
@@ -52,6 +60,13 @@ type FormState = {
   label: string;
   value: string;
   unit: string;
+  district: string;
+  talukas: string;
+  bodies: string;
+  silt: string;
+  beneficiaries: string;
+  land: string;
+  storage: string;
   title: string;
   name: string;
   slug: string;
@@ -67,6 +82,13 @@ const emptyForm: FormState = {
   label: '',
   value: '',
   unit: '',
+  district: '',
+  talukas: '',
+  bodies: '',
+  silt: '',
+  beneficiaries: '',
+  land: '',
+  storage: '',
   title: '',
   name: '',
   slug: '',
@@ -136,6 +158,8 @@ export default function AdminClient() {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [dashboardStats, setDashboardStats] = useState({ projects: 0, programs: 0, partners: 0, gallery: 0 });
 
   const isEditing = Boolean(editingId);
 
@@ -148,10 +172,26 @@ export default function AdminClient() {
 
     if (t === 'dashboard') {
       setItems([]);
+      try {
+        setLoading(true);
+        const results = await Promise.all(
+          ['projects', 'programs', 'partners', 'gallery'].map(async (key) => {
+            const response = await fetch(`/api/admin/content/${key}`, { cache: 'no-store' });
+            const data = response.ok ? await response.json() : [];
+            return [key, Array.isArray(data) ? data.length : 0] as const;
+          })
+        );
+        setDashboardStats(Object.fromEntries(results) as typeof dashboardStats);
+      } catch {
+        setDashboardStats({ projects: 0, programs: 0, partners: 0, gallery: 0 });
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
     try {
+      setLoading(true);
       const r = await fetch(`/api/admin/content/${t}`, {
         cache: 'no-store',
       });
@@ -160,11 +200,19 @@ export default function AdminClient() {
     } catch {
       setItems([]);
       setMsg('Unable to connect to the server.');
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     load('dashboard');
+    const handler = (event: Event) => {
+      const key = (event as CustomEvent<string>).detail;
+      if (key) load(key);
+    };
+    window.addEventListener('admin-tab', handler);
+    return () => window.removeEventListener('admin-tab', handler);
   }, []);
 
   function updateForm(key: keyof FormState, value: string | boolean) {
@@ -216,6 +264,13 @@ export default function AdminClient() {
       label: item.metrics?.[0]?.label ?? '',
       value: item.metrics?.[0]?.value ?? '',
       unit: item.metrics?.[0]?.unit ?? '',
+      district: item.metrics?.find((m) => m.label === 'District Covered')?.value ?? '',
+      talukas: item.metrics?.find((m) => m.label === 'Talukas Covered')?.value ?? '',
+      bodies: item.metrics?.find((m) => m.label === 'Number Of Water Bodies')?.value ?? '',
+      silt: item.metrics?.find((m) => m.label === 'Silt Excavated')?.value ?? '',
+      beneficiaries: item.metrics?.find((m) => m.label === 'Beneficiaries')?.value ?? '',
+      land: item.metrics?.find((m) => m.label === 'Land Covered')?.value ?? '',
+      storage: item.metrics?.find((m) => m.label === 'Water Storage Capacity')?.value ?? '',
       title: item.title ?? '',
       name: item.name ?? '',
       slug: item.slug ?? '',
@@ -245,27 +300,27 @@ export default function AdminClient() {
         ...body,
         year: form.year,
         metrics: [
-          {
-            label: form.label,
-            value: form.value,
-            unit: form.unit,
-            enabled: true,
-            includeInTotal: true,
-          },
+          { label: 'District Covered', value: form.district, unit: '', enabled: true, includeInTotal: true },
+          { label: 'Talukas Covered', value: form.talukas, unit: '', enabled: true, includeInTotal: true },
+          { label: 'Number Of Water Bodies', value: form.bodies, unit: '', enabled: true, includeInTotal: true },
+          { label: 'Silt Excavated', value: form.silt, unit: 'm³', enabled: true, includeInTotal: true },
+          { label: 'Beneficiaries', value: form.beneficiaries, unit: '', enabled: true, includeInTotal: true },
+          { label: 'Land Covered', value: form.land, unit: 'acres', enabled: true, includeInTotal: true },
+          { label: 'Water Storage Capacity', value: form.storage, unit: 'crore liters', enabled: true, includeInTotal: true },
         ],
         imageUrl: form.imageUrl || undefined,
       };
     }
 
-    if (tab !== 'statistics' && form.imageUrl) {
-      body.imageUrl = form.imageUrl;
+    if (tab !== 'statistics' && tab !== 'gallery' && form.imageUrl) {
+      body.image = form.imageUrl;
     }
 
     if (tab === 'gallery') {
       body = {
         ...body,
         title: form.title || form.name,
-        imageUrl: form.imageUrl,
+        image: form.imageUrl,
         published: form.published,
       };
     }
@@ -330,63 +385,94 @@ export default function AdminClient() {
     <main className="admin">
       <header className="admin-head">
         <div className="shell nav">
-          <b>PRERNA FOUNDATION · ADMIN</b>
-          <button className="btn light" onClick={logout}>
-            Log out
-          </button>
+          <div className="brandBlock">
+            <div className="brandMark">PF</div>
+            <div>
+              <b>PRERNA FOUNDATION</b>
+              <span>Content Management</span>
+            </div>
+          </div>
+          <div className="headActions">
+            <a className="siteBtn" href="/" target="_blank" rel="noreferrer">
+              View Website ↗
+            </a>
+            <button className="btn light" onClick={logout}>Log out</button>
+          </div>
         </div>
       </header>
 
       <div className="shell admin-layout">
         <aside className="admin-nav card">
-          <b>Content management</b>
+          <div className="navTitle">
+            <span>ADMIN PANEL</span>
+            <small>Manage your website</small>
+          </div>
 
-          <a onClick={() => load('dashboard')}>Dashboard</a>
+          <nav>
+            <button className={tab === 'dashboard' ? 'navItem active' : 'navItem'} onClick={() => load('dashboard')}>
+              <span>⌂</span><span>Dashboard</span>
+            </button>
 
-          {sections.map((x) => (
-            <a
-              key={x}
-              onClick={() => load(x)}
-              style={{ cursor: 'pointer' }}
-            >
-              {labels[x]}
+            {sections.map((x) => (
+              <button
+                key={x}
+                className={tab === x ? 'navItem active' : 'navItem'}
+                onClick={() => load(x)}
+              >
+                <span>
+                  {x === 'projects' ? '▣' :
+                   x === 'programs' ? '◈' :
+                   x === 'statistics' ? '↗' :
+                   x === 'partners' ? '♧' :
+                   x === 'goals' ? '◎' :
+                   x === 'gallery' ? '▧' : '▤'}
+                </span>
+                <span>{labels[x]}</span>
+              </button>
+            ))}
+
+            <div className="navDivider" />
+
+            <a className="navItem linkItem" href="/admin/contacts">
+              <span>✉</span><span>Contact requests</span>
             </a>
-          ))}
+            <a className="navItem linkItem" href="/admin/donations">
+              <span>₹</span><span>Donations</span>
+            </a>
+          </nav>
 
-          <a href="/admin/contacts">Contact requests</a>
-          <a href="/admin/donations">Donations</a>
+          <div className="adminTip">
+            <b>Tip</b>
+            <span>Keep content updated and published so visitors always see the latest information.</span>
+          </div>
         </aside>
 
-        <section>
+        <section className="admin-main">
           {tab === 'dashboard' ? (
-            <Dashboard />
+            <Dashboard stats={dashboardStats} onNavigate={load} />
           ) : (
             <>
-              <span className="eyebrow">Content</span>
-              <h1>{labels[tab]}</h1>
+              <div className="pageTop">
+                <div>
+                  <span className="eyebrow">Content management</span>
+                  <h1>{labels[tab]}</h1>
+                  <p>Manage and publish {labels[tab].toLowerCase()} from one place.</p>
+                </div>
+                {isEditing && (
+                  <button type="button" className="btn light" onClick={resetEditor}>
+                    ← Cancel editing
+                  </button>
+                )}
+              </div>
 
-              <div className="card" style={{ marginBottom: 20 }}>
+              <div className="card editorCard">
                 <div className="editorHeading">
                   <div>
-                    <h2>
-                      {isEditing
-                        ? `Edit ${labels[tab]?.replace(/s$/, '') || 'item'}`
-                        : `Add ${labels[tab]?.replace(/s$/, '') || 'item'}`}
-                    </h2>
-                    {isEditing && (
-                      <small>Editing existing content</small>
-                    )}
+                    <span className="sectionKicker">{isEditing ? 'EDIT MODE' : 'CREATE NEW'}</span>
+                    <h2>{isEditing ? `Edit ${labels[tab]?.replace(/s$/, '') || 'item'}` : `Add ${labels[tab]?.replace(/s$/, '') || 'item'}`}</h2>
+                    <small>{isEditing ? 'Update the existing content below.' : 'Fill in the details and click Save when ready.'}</small>
                   </div>
-
-                  {isEditing && (
-                    <button
-                      type="button"
-                      className="btn light"
-                      onClick={resetEditor}
-                    >
-                      Cancel edit
-                    </button>
-                  )}
+                  {msg && <span className="inlineStatus">{msg}</span>}
                 </div>
 
                 <form className="form" onSubmit={add}>
@@ -394,45 +480,38 @@ export default function AdminClient() {
                     <>
                       <label>
                         Year
-                        <input
-                          name="year"
-                          required
-                          value={form.year}
-                          onChange={(e) => updateForm('year', e.target.value)}
-                          placeholder="2026"
-                        />
+                        <input name="year" required value={form.year} onChange={(e) => updateForm('year', e.target.value)} placeholder="2026" />
                       </label>
-
+                      <div className="statsFormIntro">
+                        Enter all verified figures for one year. After saving, the same year will appear as one complete 7-metric performance card on the Impact page.
+                      </div>
                       <label>
-                        Metric label
-                        <input
-                          name="label"
-                          required
-                          value={form.label}
-                          onChange={(e) => updateForm('label', e.target.value)}
-                          placeholder="District Covered"
-                        />
+                        District Covered
+                        <input name="district" required value={form.district} onChange={(e) => updateForm('district', e.target.value)} placeholder="3" inputMode="numeric" />
                       </label>
-
                       <label>
-                        Value
-                        <input
-                          name="value"
-                          required
-                          value={form.value}
-                          onChange={(e) => updateForm('value', e.target.value)}
-                          placeholder="3"
-                        />
+                        Talukas Covered
+                        <input name="talukas" required value={form.talukas} onChange={(e) => updateForm('talukas', e.target.value)} placeholder="8" inputMode="numeric" />
                       </label>
-
                       <label>
-                        Unit
-                        <input
-                          name="unit"
-                          value={form.unit}
-                          onChange={(e) => updateForm('unit', e.target.value)}
-                          placeholder="m³, acres, crore liters, etc."
-                        />
+                        Water Bodies
+                        <input name="bodies" required value={form.bodies} onChange={(e) => updateForm('bodies', e.target.value)} placeholder="72" inputMode="numeric" />
+                      </label>
+                      <label>
+                        Silt Excavated (m³)
+                        <input name="silt" required value={form.silt} onChange={(e) => updateForm('silt', e.target.value)} placeholder="591271" inputMode="decimal" />
+                      </label>
+                      <label>
+                        Beneficiaries
+                        <input name="beneficiaries" required value={form.beneficiaries} onChange={(e) => updateForm('beneficiaries', e.target.value)} placeholder="857" inputMode="numeric" />
+                      </label>
+                      <label>
+                        Land Covered (acres)
+                        <input name="land" required value={form.land} onChange={(e) => updateForm('land', e.target.value)} placeholder="1425" inputMode="decimal" />
+                      </label>
+                      <label>
+                        Water Storage (crore liters)
+                        <input name="storage" required value={form.storage} onChange={(e) => updateForm('storage', e.target.value)} placeholder=">18" />
                       </label>
                     </>
                   ) : (
@@ -443,55 +522,33 @@ export default function AdminClient() {
                           name={tab === 'projects' ? 'name' : 'title'}
                           required={tab !== 'gallery'}
                           value={tab === 'projects' ? form.name : form.title}
-                          onChange={(e) =>
-                            updateForm(
-                              tab === 'projects' ? 'name' : 'title',
-                              e.target.value,
-                            )
-                          }
+                          onChange={(e) => updateForm(tab === 'projects' ? 'name' : 'title', e.target.value)}
+                          placeholder={tab === 'projects' ? 'Project name' : 'Title'}
                         />
                       </label>
 
                       {(tab === 'projects' || tab === 'programs') && (
                         <label>
                           Slug
-                          <input
-                            name="slug"
-                            required
-                            value={form.slug}
-                            onChange={(e) =>
-                              updateForm('slug', e.target.value)
-                            }
-                            placeholder="lowercase-with-dashes"
-                          />
+                          <input name="slug" required value={form.slug} onChange={(e) => updateForm('slug', e.target.value)} placeholder="lowercase-with-dashes" />
                         </label>
                       )}
 
-                      <label>
+                      <label className="wide">
                         Description
-                        <input
-                          name={
-                            tab === 'projects'
-                              ? 'shortDescription'
-                              : 'description'
-                          }
+                        <textarea
+                          name={tab === 'projects' ? 'shortDescription' : 'description'}
                           value={form.description}
-                          onChange={(e) =>
-                            updateForm('description', e.target.value)
-                          }
+                          onChange={(e) => updateForm('description', e.target.value)}
+                          placeholder="Write a clear, concise description..."
+                          rows={4}
                         />
                       </label>
 
                       {tab === 'programs' && (
                         <label>
                           Category
-                          <select
-                            name="category"
-                            value={form.category}
-                            onChange={(e) =>
-                              updateForm('category', e.target.value)
-                            }
-                          >
+                          <select name="category" value={form.category} onChange={(e) => updateForm('category', e.target.value)}>
                             <option>Program</option>
                             <option>Event</option>
                             <option>News</option>
@@ -503,13 +560,7 @@ export default function AdminClient() {
                       {tab === 'projects' && (
                         <label>
                           Status
-                          <select
-                            name="status"
-                            value={form.status}
-                            onChange={(e) =>
-                              updateForm('status', e.target.value)
-                            }
-                          >
+                          <select name="status" value={form.status} onChange={(e) => updateForm('status', e.target.value)}>
                             <option>active</option>
                             <option>completed</option>
                             <option>upcoming</option>
@@ -521,79 +572,56 @@ export default function AdminClient() {
                   )}
 
                   <label className="wide">
-                    Image / Photo <em>optional</em>
+                    <div className="labelRow">
+                      <span>Image / Photo</span><em>Optional</em>
+                    </div>
                     <div className="imageUploadBox">
-                      <div className="imageUploadRow">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="imageFileInput"
-                        />
-
-                        <input
-                          name="imageUrl"
-                          value={form.imageUrl}
-                          onChange={(e) =>
-                            updateForm('imageUrl', e.target.value)
-                          }
-                          placeholder="Paste image URL or upload from computer"
-                        />
+                      <div className="dropArea">
+                        <div className="uploadIcon">↑</div>
+                        <div>
+                          <b>Upload a photo</b>
+                          <small>JPG, PNG, WEBP or paste an image URL</small>
+                        </div>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} className="imageFileInput" />
                       </div>
+
+                      <input
+                        name="imageUrl"
+                        value={form.imageUrl}
+                        onChange={(e) => updateForm('imageUrl', e.target.value)}
+                        placeholder="Or paste image URL here"
+                      />
 
                       {(imagePreview || form.imageUrl) && (
                         <div className="imagePreviewBox">
-                          <img
-                            src={imagePreview || form.imageUrl}
-                            alt="Selected preview"
-                            className="imagePreview"
-                          />
-
-                          <button
-                            type="button"
-                            className="ghost imageRemove"
-                            onClick={() => {
-                              setImagePreview('');
-                              updateForm('imageUrl', '');
-                            }}
-                          >
-                            Remove Image
-                          </button>
+                          <img src={imagePreview || form.imageUrl} alt="Selected preview" className="imagePreview" />
+                          <div>
+                            <b>Photo selected</b>
+                            <small>It will be saved with this content when you click Save.</small>
+                            <button
+                              type="button"
+                              className="ghost imageRemove"
+                              onClick={() => { setImagePreview(''); updateForm('imageUrl', ''); }}
+                            >
+                              Remove image
+                            </button>
+                          </div>
                         </div>
                       )}
-
-                      <small className="imageHint">
-                        Upload a photo or paste an image URL. Existing theme,
-                        sections and content structure are unchanged.
-                      </small>
                     </div>
                   </label>
 
                   <label className="checkboxRow">
-                    <input
-                      type="checkbox"
-                      checked={form.published}
-                      onChange={(e) =>
-                        updateForm('published', e.target.checked)
-                      }
-                    />
-                    Published / visible on website
+                    <input type="checkbox" checked={form.published} onChange={(e) => updateForm('published', e.target.checked)} />
+                    <span>
+                      <b>Published / visible on website</b>
+                      <small>Turn this off if you want to keep the content as a draft.</small>
+                    </span>
                   </label>
 
                   <div className="formActions">
-                    <button className="btn" type="submit">
-                      {isEditing ? 'Update' : 'Save'}
-                    </button>
-
-                    {isEditing && (
-                      <button
-                        type="button"
-                        className="btn light"
-                        onClick={resetEditor}
-                      >
-                        Cancel
-                      </button>
-                    )}
+                    <button className="btn saveBtn" type="submit" disabled={loading}>{loading ? 'Saving…' : isEditing ? 'Save Changes' : 'Save & Publish'}</button>
+                    {isEditing && <button type="button" className="btn light" onClick={resetEditor}>Cancel</button>}
                   </div>
                 </form>
 
@@ -602,55 +630,44 @@ export default function AdminClient() {
 
               {tab === 'statistics' && <PerformanceReference />}
 
-              <div className="card">
-                <h2>Existing items</h2>
+              <div className="card existingCard">
+                <div className="listHeading">
+                  <div>
+                    <span className="sectionKicker">CONTENT LIBRARY</span>
+                    <h2>Existing {labels[tab]}</h2>
+                  </div>
+                  <span className="countBadge">{currentItems.length} item{currentItems.length === 1 ? '' : 's'}</span>
+                </div>
 
                 {currentItems.length ? (
                   <div className="itemsList">
                     {currentItems.map((i) => (
                       <div className="adminItem" key={i._id}>
                         <div className="adminItemMain">
-                          {(i.imageUrl || i.image) && (
-                            <img
-                              src={i.imageUrl || i.image}
-                              alt={i.title || i.name || String(i.year || '')}
-                              className="tableThumb"
-                            />
+                          {(i.imageUrl || i.image) ? (
+                            <img src={i.imageUrl || i.image} alt={i.title || i.name || String(i.year || '')} className="tableThumb" />
+                          ) : (
+                            <div className="tableThumb emptyThumb">IMG</div>
                           )}
-
-                          <div>
+                          <div className="itemInfo">
                             <b>{i.name || i.title || i.year}</b>
-
-                            <small>
-                              {i.slug ||
-                                i.description ||
-                                (i.metrics?.length
-                                  ? `${i.metrics.length} metric(s)`
-                                  : '')}
-                            </small>
-
-                            {i.year && (
-                              <span className="itemMeta">
-                                Year: {i.year}
-                              </span>
-                            )}
+                            <small>{i.slug || i.description || (i.metrics?.length ? `${i.metrics.length} metric(s)` : 'No additional details')}</small>
+                            {i.year && <span className="itemMeta">Year: {i.year}</span>}
                           </div>
                         </div>
-
                         <div className="rowActions">
                           <button onClick={() => openEdit(i)}>Edit</button>
-                          <button
-                            className="danger"
-                            onClick={() => remove(i)}
-                          >
-                            Delete
-                          </button>
+                          <button className="danger" onClick={() => remove(i)}>Delete</button>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p>No items yet.</p>
+                  <div className="emptyState">
+                    <div>○</div>
+                    <b>No items yet</b>
+                    <span>Create your first {labels[tab].toLowerCase()} using the form above.</span>
+                  </div>
                 )}
               </div>
             </>
@@ -661,157 +678,181 @@ export default function AdminClient() {
   );
 }
 
+
 function PerformanceReference() {
   return (
     <div className="card performanceReference">
-      <div className="editorHeading">
-        <div>
-          <span className="eyebrow">Verified project figures</span>
-          <h2>Year-wise Performance</h2>
-        </div>
-      </div>
-
+      <div className="listHeading"><div><span className="sectionKicker">VERIFIED PROJECT FIGURES</span><h2>Year-wise Performance</h2></div></div>
       <div className="performanceGrid">
-        {performanceYears.map((item) => (
-          <div className="performanceCard" key={item.year}>
-            <div className="yearNumber">{item.year}</div>
-
-            <div className="cardRows">
-              <span>
-                <b>{item.district}</b>
-                District Covered
-              </span>
-              <span>
-                <b>{item.talukas}</b>
-                Talukas Covered
-              </span>
-              <span>
-                <b>{item.bodies}</b>
-                Water Bodies
-              </span>
-              <span>
-                <b>{item.silt} m³</b>
-                Silt Excavated
-              </span>
-              <span>
-                <b>{item.beneficiaries}</b>
-                Beneficiaries
-              </span>
-              <span>
-                <b>{item.land} acres</b>
-                Land Covered
-              </span>
-              <span>
-                <b>{item.storage} crore liters</b>
-                Water Storage
-              </span>
-            </div>
-          </div>
-        ))}
+        {performanceYears.map((item) => <div className="performanceCard" key={item.year}><div className="yearNumber">{item.year}</div><div className="cardRows">
+          <span><b>{item.district}</b>District Covered</span><span><b>{item.talukas}</b>Talukas Covered</span><span><b>{item.bodies}</b>Water Bodies</span><span><b>{item.silt} m³</b>Silt Excavated</span><span><b>{item.beneficiaries}</b>Beneficiaries</span><span><b>{item.land} acres</b>Land Covered</span><span><b>{item.storage} crore liters</b>Water Storage</span>
+        </div></div>)}
       </div>
-
-      <div className="cumulativeBox">
-        <span className="eyebrow">Cumulative Impact · 2023-2026</span>
-
-        <div className="cumulativeGrid">
-          <span>
-            <b>{cumulativeImpact.district}</b>
-            Total District Covered
-          </span>
-          <span>
-            <b>{cumulativeImpact.talukas}</b>
-            Total Talukas Covered
-          </span>
-          <span>
-            <b>{cumulativeImpact.bodies}</b>
-            Number Of Bodies
-          </span>
-          <span>
-            <b>{cumulativeImpact.land} acres</b>
-            Total Land Covered
-          </span>
-          <span>
-            <b>{cumulativeImpact.silt} m³</b>
-            Total Silt Excavated
-          </span>
-          <span>
-            <b>{cumulativeImpact.storage} crore liters</b>
-            Total Water Storage
-          </span>
-        </div>
-      </div>
+      <div className="cumulativeBox"><span className="sectionKicker">CUMULATIVE IMPACT · 2023–2026</span><div className="cumulativeGrid">
+        <span><b>{cumulativeImpact.district}</b>Total Districts</span><span><b>{cumulativeImpact.talukas}</b>Total Talukas</span><span><b>{cumulativeImpact.bodies}</b>Water Bodies</span><span><b>{cumulativeImpact.land} acres</b>Land Covered</span><span><b>{cumulativeImpact.silt} m³</b>Silt Excavated</span><span><b>{cumulativeImpact.storage} crore L</b>Water Storage</span>
+      </div></div>
     </div>
   );
 }
 
-function Dashboard() {
+function Dashboard({
+  stats,
+  onNavigate,
+}: {
+  stats: { projects: number; programs: number; partners: number; gallery: number };
+  onNavigate: (key: string) => void;
+}) {
+  const cards = [
+    ['Projects', 'Manage projects and photos.', 'projects', '▣'],
+    ['Programs', 'Publish programs, events and news.', 'programs', '◈'],
+    ['Impact Statistics', 'Maintain verified figures.', 'statistics', '↗'],
+    ['Partners', 'Manage partner information.', 'partners', '♧'],
+    ['Future Goals', 'Update website goals.', 'goals', '◎'],
+    ['Gallery', 'Add and manage campaign photos.', 'gallery', '▧'],
+  ];
+
+  const totalContent = stats.projects + stats.programs + stats.partners + stats.gallery;
+
   return (
     <>
-      <span className="eyebrow">Overview</span>
-      <h1>Welcome back</h1>
-
-      <div className="admin-grid">
-        {[
-          ['Projects', 'Manage active work and project pages'],
-          ['Programs', 'Publish programs and news'],
-          ['Impact', 'Enter verified year-wise data'],
-          ['Contacts', 'Reply to enquiries'],
-          ['Donations', 'View secure payment records'],
-          ['Settings', 'Configure live integrations'],
-        ].map(([a, b]) => (
-          <div className="card" key={a}>
-            <h2>{a}</h2>
-            <p>{b}</p>
-          </div>
-        ))}
+      <div className="dashboardHero">
+        <div>
+          <span className="eyebrow">PRERNA FOUNDATION · ADMIN</span>
+          <h1>Good to see you.</h1>
+          <p>Everything you need to manage the foundation website, in one place.</p>
+        </div>
+        <button type="button" className="primaryDashBtn" onClick={() => onNavigate('projects')}>
+          <span>＋</span> Add project
+        </button>
       </div>
 
-      <div className="notice" style={{ marginTop: 20 }}>
-        Financial settings, SMTP and Razorpay credentials are only read from
-        server environment variables and never shown here.
+      <div className="kpiGrid">
+        <div className="kpiCard">
+          <div className="kpiIcon">▣</div>
+          <div><small>Total projects</small><strong>{stats.projects}</strong><span>Published content</span></div>
+        </div>
+        <div className="kpiCard">
+          <div className="kpiIcon">◈</div>
+          <div><small>Programs & news</small><strong>{stats.programs}</strong><span>Activities & updates</span></div>
+        </div>
+        <div className="kpiCard">
+          <div className="kpiIcon">♧</div>
+          <div><small>Partners</small><strong>{stats.partners}</strong><span>Collaborations</span></div>
+        </div>
+        <div className="kpiCard">
+          <div className="kpiIcon">▧</div>
+          <div><small>Gallery photos</small><strong>{stats.gallery}</strong><span>Visual stories</span></div>
+        </div>
+      </div>
+
+      <div className="dashboardSplit">
+        <div className="dashboardPanel card">
+          <div className="panelHead">
+            <div><span className="sectionKicker">CONTENT OVERVIEW</span><h2>Website content</h2></div>
+            <span className="livePill"><i /> Live</span>
+          </div>
+          <div className="overviewRows">
+            {[
+              ['Projects', stats.projects, 'projects', '▣'],
+              ['Programs', stats.programs, 'programs', '◈'],
+              ['Partners', stats.partners, 'partners', '♧'],
+              ['Gallery', stats.gallery, 'gallery', '▧'],
+            ].map(([name, count, key, icon]) => (
+              <button type="button" className="overviewRow" key={String(key)} onClick={() => onNavigate(String(key))}>
+                <span className="miniIcon">{icon}</span>
+                <span className="overviewName"><b>{name}</b><small>Manage {String(name).toLowerCase()}</small></span>
+                <strong>{count}</strong>
+                <span className="rowArrow">→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="dashboardPanel card">
+          <div className="panelHead">
+            <div><span className="sectionKicker">IMPACT TREND</span><h2>Water bodies by year</h2></div>
+            <span className="chartUnit">Count</span>
+          </div>
+          <div className="miniChart">
+            {performanceYears.slice().reverse().map((item) => {
+              const height = Math.max(18, Math.round((Number(item.bodies) / 101) * 100));
+              return (
+                <div className="barGroup" key={item.year}>
+                  <div className="barValue">{item.bodies}</div>
+                  <div className="barTrack"><div className="barFill" style={{ height: `${height}%` }} /></div>
+                  <small>{item.year}</small>
+                </div>
+              );
+            })}
+          </div>
+          <div className="chartFoot"><span>2023</span><b>278 cumulative water bodies</b><span>2026</span></div>
+        </div>
+      </div>
+
+      <div className="dashboardCharts">
+        <div className="dashboardPanel card chartCard">
+          <div className="panelHead"><div><span className="sectionKicker">WATER CONSERVATION</span><h2>Water bodies</h2></div><span className="chartUnit">2023–2026</span></div>
+          <div className="chartMetric"><strong>278</strong><span>cumulative</span></div>
+          <div className="chartBars">
+            {performanceYears.slice().reverse().map((item) => {
+              const height = Math.max(10, Math.round((Number(item.bodies) / 101) * 100));
+              return <div className="barGroup" key={item.year}><div className="barValue">{item.bodies}</div><div className="barTrack"><div className="barFill" style={{height:`${height}%`}} /></div><small>{item.year}</small></div>;
+            })}
+          </div>
+        </div>
+
+        <div className="dashboardPanel card chartCard">
+          <div className="panelHead"><div><span className="sectionKicker">COMMUNITY IMPACT</span><h2>Beneficiaries</h2></div><span className="chartUnit">People</span></div>
+          <div className="chartMetric"><strong>3,831</strong><span>2023–2026</span></div>
+          <div className="chartBars">
+            {performanceYears.slice().reverse().map((item) => {
+              const height = Math.max(10, Math.round((Number(item.beneficiaries) / 1426) * 100));
+              return <div className="barGroup" key={item.year}><div className="barValue">{item.beneficiaries}</div><div className="barTrack"><div className="barFill" style={{height:`${height}%`}} /></div><small>{item.year}</small></div>;
+            })}
+          </div>
+        </div>
+
+        <div className="dashboardPanel card chartCard">
+          <div className="panelHead"><div><span className="sectionKicker">RESTORATION WORK</span><h2>Silt excavated</h2></div><span className="chartUnit">m³</span></div>
+          <div className="chartMetric"><strong>2.90M</strong><span>cumulative</span></div>
+          <div className="chartBars">
+            {performanceYears.slice().reverse().map((item) => {
+              const height = Math.max(10, Math.round((Number(item.silt) / 1005452) * 100));
+              return <div className="barGroup" key={item.year}><div className="barValue">{(Number(item.silt)/1000).toFixed(0)}K</div><div className="barTrack"><div className="barFill" style={{height:`${height}%`}} /></div><small>{item.year}</small></div>;
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboardSummary">
+        <div className="summaryCard"><b>11</b><span>Districts covered</span></div>
+        <div className="summaryCard"><b>42</b><span>Talukas covered</span></div>
+        <div className="summaryCard"><b>4,400</b><span>Acres covered</span></div>
+        <div className="summaryCard"><b>&gt;87 Cr</b><span>Water storage created</span></div>
+        <div className="summaryCard"><b>278</b><span>Water bodies restored</span></div>
+        <div className="summaryCard"><b>2.90M m³</b><span>Silt excavated</span></div>
+      </div>
+
+      <div className="quickSection">
+        <div className="panelHead">
+          <div><span className="sectionKicker">QUICK ACCESS</span><h2>Manage content</h2></div>
+          <span className="contentCount">{totalContent} records</span>
+        </div>
+        <div className="dashboardGrid">
+          {cards.map(([title, description, key, icon]) => (
+            <button type="button" className="dashboardCard card" key={key} onClick={() => onNavigate(key)}>
+              <span className="dashboardIcon">{icon}</span>
+              <div><b>{title}</b><span>{description}</span></div>
+              <strong>→</strong>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="dashboardNotice">
+        <span className="noticeIcon">✓</span>
+        <div><b>Content management is ready</b><span>Your existing authentication, API endpoints and MongoDB structure are unchanged.</span></div>
       </div>
     </>
   );
 }
-
-
-<style jsx>{`
-  .editorHeading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
-  .editorHeading h2{margin:4px 0 0}
-  .formActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .adminMessage{margin-top:14px}
-  .checkboxRow{display:flex!important;flex-direction:row!important;align-items:center;gap:8px}
-  .checkboxRow input{width:auto!important}
-  .imageUploadBox{display:flex;flex-direction:column;gap:10px}
-  .imageUploadRow{display:grid;grid-template-columns:minmax(190px,260px) 1fr;gap:10px}
-  .imageFileInput{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);color:var(--text);font-size:12px}
-  .imageFileInput::file-selector-button{margin-right:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.06);color:var(--text);cursor:pointer}
-  .imagePreviewBox{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .imagePreview{width:150px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-  .imageRemove{font-size:11px}
-  .imageHint{color:var(--muted);font-size:11px}
-  .itemsList{display:flex;flex-direction:column;gap:10px}
-  .adminItem{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid var(--line)}
-  .adminItem:last-child{border-bottom:0}
-  .adminItemMain{display:flex;align-items:center;gap:12px;min-width:0}
-  .adminItemMain>div{display:flex;flex-direction:column;gap:3px;min-width:0}
-  .adminItemMain small{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
-  .itemMeta{font-size:11px;color:var(--muted)}
-  .tableThumb{width:58px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block;flex:none}
-  .performanceReference{margin-bottom:20px}
-  .performanceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .performanceCard{border:1px solid var(--line);border-radius:14px;padding:16px}
-  .yearNumber{font-size:25px;font-weight:800;margin-bottom:12px}
-  .cardRows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .cardRows span,.cumulativeGrid span{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted)}
-  .cardRows b,.cumulativeGrid b{font-size:15px;color:var(--text)}
-  .cumulativeBox{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
-  .cumulativeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:12px}
-  @media(max-width:760px){
-    .imageUploadRow,.performanceGrid{grid-template-columns:1fr}
-    .cumulativeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  }
-  @media(max-width:480px){
-    .cumulativeGrid,.cardRows{grid-template-columns:1fr}
-  }
-`}</style>

@@ -202,7 +202,7 @@ export default async function Impact() {
               <strong>2023 — 2026</strong>
             </div>
             <div className="impact-bar-chart" aria-label="Year-wise water bodies and beneficiaries">
-              {migratedYears
+              {visibleRows
                 .slice()
                 .sort((a, b) => a.year - b.year)
                 .map((row) => {
@@ -254,7 +254,7 @@ export default async function Impact() {
           </div>
 
           <div className="impact-mini-bars">
-            {migratedYears
+            {visibleRows
               .slice()
               .sort((a, b) => a.year - b.year)
               .map((row) => {
