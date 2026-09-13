@@ -247,21 +247,21 @@ return (
 
               <div className="hero-kicker">
                 <span className="hero-kicker-line" />
-                <span>कृतसंकल्पा सदास्मरन्त:</span>
+                {/* <span>कृतसंकल्पा सदास्मरन्त:</span> */}
               </div>
 
               <h1>
-                Growing stronger
+                Resolved
                 <br />
-                communities,
+                And,
                 <br />
-                <em>together.</em>
+                <em>Always Remembering.</em>
               </h1>
 
               <p>
-                Prerna Foundation creates meaningful change through
-                education, agriculture, rural development,
-                entrepreneurship and sustainable action.
+                Prerna Foundation creates meaningful change through water conservation,
+                education, agriculture, rural development.
+            
               </p>
 
               <div className="hero-actions" aria-hidden="true" style={{ display: "none" }}>
@@ -281,7 +281,7 @@ return (
                 <span>•</span>
                 <span>MAHARASHTRA</span>
                 <span>•</span>
-                <span>COMMUNITY DEVELOPMENT</span>
+                <span>SUSTAINABLE DEVELOPMENT</span>
               </div>
 
             </div>
@@ -327,14 +327,14 @@ return (
                   serve.
                 </p>
 
-                <p>
-                  We facilitate opportunities in education,
-                  agriculture, the cooperative sector, rural
-                  development and entrepreneurship. Founded in 2014,
-                  the Foundation works towards creating a society
-                  where individuals have an opportunity to thrive
-                  and contribute meaningfully to their communities.
-                </p>
+              <p>
+                We facilitate opportunities in water conservation, education,
+                agriculture,rural
+                development. Founded in 2014,
+                the Foundation works towards creating a society
+                where individuals have an opportunity to thrive
+                and contribute meaningfully to their communities.
+              </p>
 
                 <div className="intro-actions">
                   <Link className="btn" href="/about-us">
