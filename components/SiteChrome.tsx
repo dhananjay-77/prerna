@@ -134,7 +134,7 @@ export function Footer() {
           <b>Contact</b>
 
           <p>
-            +91 7020724172
+            +91 8090127111
             <br />
             foundn.prerana@gmail.com
             <br />
@@ -149,7 +149,7 @@ export function Footer() {
 
         <small>
           © {new Date().getFullYear()} Prerna Foundation ·{' '}
-          <Link href="/credits">
+          <Link href="https://dhananjay-77.vercel.app/">
             This site developed and managed by Dhananjay
           </Link>
         </small>
