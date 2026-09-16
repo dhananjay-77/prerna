@@ -8,8 +8,15 @@ const schema = z.object({ name: z.string().min(2).max(100), email: z.string().em
 const missingSmtpConfiguration = () => ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASSWORD', 'FROM_EMAIL', 'ADMIN_EMAIL'].filter((key) => !process.env[key]);
 
 export async function POST(request: Request) {
+  let input: unknown;
   try {
-    const body = schema.parse(await request.json());
+    input = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+
+  try {
+    const body = schema.parse(input);
     await connectDB();
     const item = await ContactRequest.create(body);
     let notificationStatus = 'not_configured';
@@ -25,6 +32,8 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ id: item._id, notificationStatus }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof z.ZodError ? 'Invalid form details' : 'Unable to save enquiry' }, { status: 400 });
+    if (error instanceof z.ZodError) return NextResponse.json({ error: 'Invalid form details' }, { status: 400 });
+    console.error('Contact request could not be saved.', error instanceof Error ? error.message : 'Unknown error');
+    return NextResponse.json({ error: 'Unable to save enquiry' }, { status: 500 });
   }
 }

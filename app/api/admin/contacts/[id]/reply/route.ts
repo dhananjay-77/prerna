@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { ContactRequest } from '@/models';
-import { requireAdmin } from '@/lib/auth';
+import { AuthError, requireAdmin } from '@/lib/auth';
 import nodemailer from 'nodemailer';
 
 const smtpIsConfigured = () => Boolean(
@@ -15,7 +15,12 @@ export async function POST(
   try {
     const admin = await requireAdmin();
 
-    const body = await request.json();
+    let body: { message?: unknown };
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
     const message = String(body.message || '').trim();
 
     if (!message || message.length > 5000) {
@@ -87,12 +92,9 @@ export async function POST(
       ok: true,
       emailStatus,
     });
-  } catch {
-    console.error('Reply API error.');
-
-    return NextResponse.json(
-      { error: 'Unable to send reply' },
-      { status: 400 }
-    );
+  } catch (error) {
+    if (error instanceof AuthError) return NextResponse.json({ error: error.status === 403 ? 'Forbidden' : 'Unauthorized' }, { status: error.status });
+    console.error('Reply API error.', error instanceof Error ? error.message : 'Unknown error');
+    return NextResponse.json({ error: 'Unable to send reply' }, { status: 500 });
   }
 }

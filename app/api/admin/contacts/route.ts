@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { ContactRequest } from '@/models';
-import { requireAdmin } from '@/lib/auth';
+import { AuthError, requireAdmin } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -14,10 +14,14 @@ export async function GET() {
       .lean();
 
     return NextResponse.json(contacts);
-  } catch {
+  } catch (error) {
+    if (!(error instanceof AuthError)) {
+      console.error('Unable to load contacts.', error instanceof Error ? error.message : 'Unknown error');
+      return NextResponse.json({ error: 'Unable to load contacts' }, { status: 500 });
+    }
     return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
+      { error: error.status === 403 ? 'Forbidden' : 'Unauthorized' },
+      { status: error.status }
     );
   }
 }
