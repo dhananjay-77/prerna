@@ -4,11 +4,14 @@ import { connectDB } from '@/lib/db';
 import { User } from '@/models';
 import { signSession } from '@/lib/auth';
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const email = String(body?.email || '').trim().toLowerCase();
+    const email = String(body?.email || '')
+      .trim()
+      .toLowerCase();
+
     const password = String(body?.password || '');
 
     if (!email || !password) {
@@ -23,7 +26,7 @@ export async function POST(request) {
     console.log('[ADMIN LOGIN] email:', email);
 
     const user = await User.findOne({
-      email: email,
+      email,
     });
 
     console.log('[ADMIN LOGIN] user found:', !!user);
@@ -38,20 +41,14 @@ export async function POST(request) {
 
     if (!user) {
       return NextResponse.json(
-        {
-          error: 'USER_NOT_FOUND',
-          message: 'Admin user was not found in the database.',
-        },
+        { error: 'USER_NOT_FOUND' },
         { status: 401 }
       );
     }
 
     if (!user.password) {
       return NextResponse.json(
-        {
-          error: 'PASSWORD_FIELD_MISSING',
-          message: 'User password field is missing.',
-        },
+        { error: 'PASSWORD_FIELD_MISSING' },
         { status: 500 }
       );
     }
@@ -68,20 +65,14 @@ export async function POST(request) {
 
     if (!passwordMatch) {
       return NextResponse.json(
-        {
-          error: 'PASSWORD_MISMATCH',
-          message: 'Password does not match the stored password.',
-        },
+        { error: 'PASSWORD_MISMATCH' },
         { status: 401 }
       );
     }
 
     if (!user.role) {
       return NextResponse.json(
-        {
-          error: 'ROLE_MISSING',
-          message: 'Admin user role is missing.',
-        },
+        { error: 'ROLE_MISSING' },
         { status: 500 }
       );
     }
@@ -109,14 +100,16 @@ export async function POST(request) {
     return response;
   } catch (error) {
     console.error('[ADMIN LOGIN] SERVER ERROR:', {
-      name: error?.name,
-      message: error?.message,
+      name: error instanceof Error ? error.name : 'UnknownError',
+      message:
+        error instanceof Error
+          ? error.message
+          : 'Unknown server error',
     });
 
     return NextResponse.json(
       {
         error: 'SERVER_ERROR',
-        message: 'Unable to sign in.',
       },
       { status: 500 }
     );
