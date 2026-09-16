@@ -1,37 +1,12 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { connectDB } from '@/lib/db';
-import { User } from '@/models';
 import { signSession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
-    // -----------------------------------------
-    // Read request body
-    // -----------------------------------------
-    let body: {
-      email?: unknown;
-      password?: unknown;
-    };
+    const body = await request.json();
 
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json(
-        {
-          error: 'Invalid request',
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    // -----------------------------------------
-    // Normalize credentials
-    // -----------------------------------------
     const email = String(body?.email ?? '')
       .trim()
       .toLowerCase();
@@ -40,142 +15,62 @@ export async function POST(request: Request) {
 
     if (!email || !password) {
       return NextResponse.json(
-        {
-          error: 'Email and password are required',
-        },
-        {
-          status: 400,
-        }
+        { error: 'Email and password are required' },
+        { status: 400 }
       );
     }
 
-    // -----------------------------------------
-    // Connect to MongoDB Atlas
-    // -----------------------------------------
-    await connectDB();
+    const adminEmail = String(
+      process.env.ADMIN_EMAIL ?? ''
+    )
+      .trim()
+      .toLowerCase();
 
-    // -----------------------------------------
-    // Find admin user
-    // -----------------------------------------
-    const user = await User.findOne({
-      email,
-    }).select('+password');
-
-    // Never reveal whether email exists
-    // -----------------------------------------
-    if (!user) {
-      return NextResponse.json(
-        {
-          error: 'Invalid email or password',
-        },
-        {
-          status: 401,
-        }
-      );
-    }
-
-    // -----------------------------------------
-    // Validate stored password
-    // -----------------------------------------
-    if (
-      typeof user.password !== 'string' ||
-      !user.password.trim()
-    ) {
-      console.error(
-        '[ADMIN LOGIN] User password is missing'
-      );
-
-      return NextResponse.json(
-        {
-          error: 'Unable to sign in',
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-
-    // -----------------------------------------
-    // Compare bcrypt password
-    // -----------------------------------------
-    const passwordMatch = await bcrypt.compare(
-      password,
-      user.password
+    const adminPassword = String(
+      process.env.ADMIN_PASSWORD ?? ''
     );
 
-    if (!passwordMatch) {
+    if (!adminEmail || !adminPassword) {
+      console.error(
+        '[ADMIN LOGIN] ADMIN_EMAIL or ADMIN_PASSWORD is missing'
+      );
+
       return NextResponse.json(
-        {
-          error: 'Invalid email or password',
-        },
-        {
-          status: 401,
-        }
+        { error: 'Admin login is not configured' },
+        { status: 500 }
       );
     }
-
-    // -----------------------------------------
-    // Validate role
-    // -----------------------------------------
-    const role = String(user.role || '').trim();
 
     if (
-      role !== 'super_admin' &&
-      role !== 'content_admin'
+      email !== adminEmail ||
+      password !== adminPassword
     ) {
-      console.error(
-        '[ADMIN LOGIN] Invalid or missing user role'
-      );
-
       return NextResponse.json(
-        {
-          error: 'Unable to sign in',
-        },
-        {
-          status: 500,
-        }
+        { error: 'Invalid email or password' },
+        { status: 401 }
       );
     }
 
-    // -----------------------------------------
-    // Create JWT session
-    // -----------------------------------------
     const token = signSession({
-      id: String(user._id),
-      email: email,
-      role: role,
+      id: 'static-admin',
+      email: adminEmail,
+      role: 'super_admin',
     });
 
-    // -----------------------------------------
-    // Create response
-    // -----------------------------------------
-    const response = NextResponse.json(
-      {
-        ok: true,
-      },
-      {
-        status: 200,
-      }
-    );
+    const response = NextResponse.json({
+      ok: true,
+    });
 
-    // -----------------------------------------
-    // Set secure admin session cookie
-    // -----------------------------------------
-    response.cookies.set(
-      'prerna_session',
-      token,
-      {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 8,
-        path: '/',
-      }
-    );
+    response.cookies.set('prerna_session', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 8,
+      path: '/',
+    });
 
     return response;
   } catch (error) {
-    // Safe server-side logging
     console.error('[ADMIN LOGIN] Error:', {
       name:
         error instanceof Error
@@ -188,12 +83,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      {
-        error: 'Unable to sign in',
-      },
-      {
-        status: 500,
-      }
+      { error: 'Unable to sign in' },
+      { status: 500 }
     );
   }
 }

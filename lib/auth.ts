@@ -1,24 +1,14 @@
-import jwt, { type JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
-export const SESSION_COOKIE = 'prerna_session';
-const ADMIN_ROLES = new Set(['super_admin', 'content_admin']);
-
-export type AdminSession = {
-  id: string;
-  email: string;
-  role: 'super_admin' | 'content_admin';
-};
-
-export class AuthError extends Error {
-  constructor(public readonly status: 401 | 403) {
-    super(status === 403 ? 'FORBIDDEN' : 'UNAUTHORIZED');
-  }
-}
+const SESSION_COOKIE = 'prerna_session';
 
 function getSecret() {
   const secret = process.env.JWT_SECRET;
-  if (secret) return secret;
+
+  if (secret) {
+    return secret;
+  }
 
   if (process.env.NODE_ENV === 'production') {
     throw new Error('JWT_SECRET is not configured');
@@ -27,15 +17,7 @@ function getSecret() {
   return 'development-only-change-me';
 }
 
-function normalizePayload(payload: JwtPayload): AdminSession | null {
-  const { id, email, role } = payload;
-  if (typeof id !== 'string' || typeof email !== 'string' || typeof role !== 'string') return null;
-  if (!ADMIN_ROLES.has(role)) return null;
-
-  return { id, email: email.toLowerCase(), role: role as AdminSession['role'] };
-}
-
-export function signSession(session: AdminSession): string {
+export function signSession(session) {
   return jwt.sign(
     {
       id: String(session.id),
@@ -49,9 +31,10 @@ export function signSession(session: AdminSession): string {
   );
 }
 
-export async function session(): Promise<AdminSession | null> {
+export async function session() {
   try {
-    const token = (await cookies()).get(SESSION_COOKIE)?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE)?.value;
 
     if (!token) {
       return null;
@@ -59,33 +42,41 @@ export async function session(): Promise<AdminSession | null> {
 
     const decoded = jwt.verify(token, getSecret());
 
-    if (typeof decoded === 'string') return null;
-    return normalizePayload(decoded);
+    if (!decoded || typeof decoded !== 'object') {
+      return null;
+    }
+
+    return {
+      id: String(decoded.id),
+      email: String(decoded.email).toLowerCase(),
+      role: decoded.role,
+    };
   } catch {
-    // Invalid and expired cookies are normal logged-out states.
     return null;
   }
 }
 
-export async function requireAdmin(financial = false): Promise<AdminSession> {
+export async function requireAdmin(financial = false) {
   const currentSession = await session();
 
   if (!currentSession) {
-    throw new AuthError(401);
+    throw new Error('UNAUTHORIZED');
   }
 
   if (
     financial &&
     currentSession.role !== 'super_admin'
   ) {
-    throw new AuthError(403);
+    throw new Error('UNAUTHORIZED');
   }
 
   return currentSession;
 }
 
-export async function logoutSession(): Promise<void> {
-  (await cookies()).set(SESSION_COOKIE, '', {
+export async function logoutSession() {
+  const cookieStore = await cookies();
+
+  cookieStore.set(SESSION_COOKIE, '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
